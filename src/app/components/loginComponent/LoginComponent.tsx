@@ -5,8 +5,6 @@ import styles from "./LoginComponent.module.css";
 import axios from "axios";
 import Router from "next/router";
 
-// ! 암호환된 로그인 decode(bcrypt로 변환해주었음) - 해제해서 사용자가 입력한 값이 나오도록 해줘야함
-
 interface ErrorType {
   response?: {
     data?: {
@@ -26,6 +24,7 @@ export default function LoginComponent() {
     try {
       const response = await axios.post("/api/login", { userId, pw });
       if (response.status == 200) {
+        localStorage.setItem("refreshToken", response.data.refreshToken);
         router.push("/");
       } else {
         console.log(response.status);

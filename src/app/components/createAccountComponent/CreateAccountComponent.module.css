@@ -1,0 +1,18 @@
+.title {
+  font-size: 3rem;
+}
+.featList {
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+.featItem {
+  word-break: break-word;
+}
+.button {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-size: 1.5rem;
+  border: 1px solid skyblue;
+  background-color: transparent;
+}
