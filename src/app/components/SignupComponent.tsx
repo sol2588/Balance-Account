@@ -2,7 +2,7 @@
 
 import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import styles from "./SignupForm.module.css";
+import styles from "./SignupComponent.module.css";
 import axios from "axios";
 
 interface ErrorType {
@@ -13,7 +13,7 @@ interface ErrorType {
   };
 }
 
-export default function Signup() {
+export default function SignupComponent() {
   const router = useRouter();
   const [userName, setUserName] = useState("");
   const [userId, setUserId] = useState("");

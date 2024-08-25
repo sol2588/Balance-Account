@@ -1,7 +1,7 @@
 "use client";
 import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import styles from "./LoginForm.module.css";
+import styles from "./LoginComponent.module.css";
 import axios from "axios";
 import Router from "next/router";
 
@@ -15,7 +15,7 @@ interface ErrorType {
   };
 }
 
-export default function LoginForm() {
+export default function LoginComponent() {
   const router = useRouter();
   const [message, setMessage] = useState("");
   const [userId, setUserId] = useState("");
