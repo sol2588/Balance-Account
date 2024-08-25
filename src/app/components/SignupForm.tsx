@@ -1,9 +1,17 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./SignupForm.module.css";
 import axios from "axios";
+
+interface ErrorType {
+  response?: {
+    data?: {
+      message: string;
+    };
+  };
+}
 
 export default function Signup() {
   const router = useRouter();
@@ -11,17 +19,30 @@ export default function Signup() {
   const [userId, setUserId] = useState("");
   const [pw, setPw] = useState("");
   const [pwChk, setPwChk] = useState("");
+  const [message, setMessage] = useState("");
+  const [pwValid, setPwValid] = useState("");
+
+  // ! 이 부분 이상해 : logic - 현재는 pwChk입력후 pw를 바꾸면 둘이 일치해도 일치하지 않다고 나옴
+  useEffect(() => {
+    if (pw != pwChk) {
+      setPwValid("비밀번호가 일치하지 않습니다.");
+    } else if (pw == pwChk) {
+      setPwValid("비밀번호가 일치합니다.");
+    }
+  }, [pwChk]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/signup", { userName, userId, pw, pwChk });
-      console.log(res);
-      if (res.status === 200) {
+      const response = await axios.post("/api/signup", { userName, userId, pw, pwChk });
+      if (response.status === 200) {
         router.push("/login");
+      } else {
+        console.log(response.status);
       }
-    } catch (e) {
-      console.log(e);
+    } catch (error: unknown) {
+      const err = error as ErrorType;
+      setMessage(err.response?.data?.message || "Unknown error occurred");
     }
   };
 
@@ -44,8 +65,10 @@ export default function Signup() {
 
           <label htmlFor="pwChk">비밀번호 확인</label>
           <input type="password" id="pwChk" name="pwChk" value={pwChk} onChange={e => setPwChk(e.target.value)} />
+          <p>{pwValid}</p>
         </fieldset>
         <button type="submit">가입하기</button>
+        {message.length && <p>{message}</p>}
       </form>
     </section>
   );
