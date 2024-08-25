@@ -1,0 +1,14 @@
+.signupContainer {
+}
+
+.signupHeader {
+  text-align: center;
+}
+
+.signupField {
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
