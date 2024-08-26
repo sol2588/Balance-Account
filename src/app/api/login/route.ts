@@ -33,10 +33,12 @@ export async function POST(req: NextRequest) {
       const token = generateAccess(userId);
       const refreshToken = generateRefresh(userId);
 
-      const headers = new Headers();
-      headers.append("Set-Cookie", `accessToken=${token}; HttpOnly; Path=/; Max-Age=600; SameSite=Strict`);
-      //! 수정 : refreshToken은 db에 저장
-      return NextResponse.json({ refreshToken }, { headers });
+      // 첫번째 인자로 json data, 두번째 인자로 옵션객체
+      // ? 수정부분 잘 반영되는지 확인
+      return NextResponse.json(
+        { refreshToken },
+        { headers: { "Set-Cookie": `accessToken=${token}; HttpOnly; Path=/; Max-Age=600; SameSite=Strict` } },
+      );
     } else {
       return NextResponse.json({ message: "Invalid credential" }, { status: 400 });
     }
