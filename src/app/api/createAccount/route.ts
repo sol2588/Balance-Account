@@ -27,15 +27,15 @@ export async function GET(req: NextRequest) {
       const accountRef = querySnapshot.docs.some(doc => doc.data().account);
       console.log("계좌소유여부 확인: ", accountRef);
 
-      // 1-2) 계좌존재하는 경우
+      // 1-1) 계좌존재하는 경우
       if (accountRef) {
         return NextResponse.json({ message: "Account has already created" }, { status: 400 });
       }
 
-      // 2) 걔좌신규 개설인 경우 user의 db에 독립된 docs 추가
+      // 1-2) 걔좌신규 개설인 경우 user의 db에 독립된 docs 추가
       const docRef = doc(collection(db, "users", `user_${userId}`, "account"), `account_${userId}`);
-      await setDoc(docRef, { account: account(), money: 0 });
-      return NextResponse.json({ message: "success create account" }, { status: 200 });
+      await setDoc(docRef, { account: account(), balance: 0 });
+      return NextResponse.json({ account: account(), balance: 0 }, { status: 200 });
     } catch (err) {
       console.log(err);
       return NextResponse.json({ message: "Error on CreateAccount" }, { status: 400 });
