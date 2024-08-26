@@ -41,12 +41,6 @@ export async function POST(req: NextRequest) {
       id: userId,
       pw: encryptedPW,
     });
-    // 4) token 쿠키 저장
-    // let response = NextResponse.next();
-    // response.cookies.set("Set-Cookie", `access_token=${token}; Path=/; Expires=10m; HttpOnly`);
-
-    // pw일치여부 검증
-    const vallidPassword = await bcrypt.compare(pw, encryptedPW);
 
     return NextResponse.json({ message: "success" });
   }
