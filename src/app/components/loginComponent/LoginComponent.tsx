@@ -24,8 +24,10 @@ export default function LoginComponent() {
     try {
       const response = await axios.post("/api/login", { userId, pw });
       if (response.status == 200) {
-        localStorage.setItem("refreshToken", response.data.refreshToken);
-        router.push("/");
+        // access token은 localstorage에 저장하고 refresh는 HttpOnly로 클라이언트 JS로는 접근하여 확인 불가
+        // session Storage - cookie 탭에 담겨있고 클라이언트에서 request보낼때 자동으로 http의 모든 내용을 포함함
+        localStorage.setItem("accessToken", response.data.token);
+        router.push("/main");
       } else {
         console.log(response.status);
       }

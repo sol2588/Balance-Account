@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { accessVerify, generateAccess, generateRefresh, refreshVerify } from "@/utills/jwtToken";
-import { db } from "@/utills/database";
+import { accessVerify, generateAccess, generateRefresh, refreshVerify } from "@/utils/jwtToken";
+import { db } from "@/utils/database";
 import { Jwt } from "jsonwebtoken";
 
 export function GET(req: NextRequest) {

@@ -34,10 +34,14 @@ export async function POST(req: NextRequest) {
       const refreshToken = generateRefresh(userId);
 
       // 첫번째 인자로 json data, 두번째 인자로 옵션객체
-      // ? 수정부분 잘 반영되는지 확인
+      // 리프레시 토큰을 headers에 담고 access를 return
       return NextResponse.json(
-        { refreshToken },
-        { headers: { "Set-Cookie": `accessToken=${token}; HttpOnly; Path=/; Max-Age=600; SameSite=Strict` } },
+        { token },
+        {
+          headers: {
+            "Set-Cookie": `refreshToken=${refreshToken}; HttpOnly; Secure; Path=/; Max-Age=1209600; SameSite=Strict`,
+          },
+        },
       );
     } else {
       return NextResponse.json({ message: "Invalid credential" }, { status: 400 });
