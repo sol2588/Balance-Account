@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
+
 export function POST(req: NextRequest) {
   if (req.method == "POST") {
     // HttpOnly이기 때문에 브라우저에서는 파기 불가

@@ -1,18 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { accessVerify, generateAccess, generateRefresh, refreshVerify } from "@/utils/jwtToken";
-import { db } from "@/utils/database";
-import { Jwt } from "jsonwebtoken";
+import { generateAccess, generateRefresh, refreshVerify } from "@/utils/jwtToken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 export function GET(req: NextRequest) {
   if (req.method == "GET") {
     try {
-      // ! refresh 토큰이 반환하는 값 확인
       const cookieStore = cookies();
       let refreshToken = cookieStore.get("refreshToken")?.value;
 
-      // ! db에서 userId 가져와야해
-      const userId = "1";
+      const decoded = refreshToken ? jwt.verify(refreshToken, process.env.PRIVATE_KEY as string) : "";
+      const { userId } = decoded as JwtPayload;
       const accessToken = generateAccess(userId);
       if (refreshToken && refreshVerify(refreshToken)) {
         return NextResponse.json({ userId, accessToken });

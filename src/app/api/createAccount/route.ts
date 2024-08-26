@@ -1,12 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/utils/database";
 import { getDocs, collection, setDoc, doc } from "firebase/firestore";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { cookies } from "next/headers";
 
+// get 이어도 문제 없을 듯 애초에 그냥 요청하면 자동으로 계좌 생성하고 return하는게 목적
 export async function POST(req: NextRequest) {
   if (req.method == "POST") {
     const data = req.json();
 
-    // 토큰으로 user 추론
+    // 토큰으로 userId 찾기
+    const cookieStore = cookies();
+    const token = cookieStore.get("refreshToken")?.value;
+    const decoded = token ? jwt.verify(token, process.env.PRIVATE_KEY as string) : "";
+    const { userId } = decoded as JwtPayload;
 
     // 계좌 생성 로직 짜기
     const account = () => {
