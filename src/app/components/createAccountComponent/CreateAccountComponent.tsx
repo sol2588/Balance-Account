@@ -12,12 +12,16 @@ export default function CreateAccountComponent() {
     try {
       const response = await axios.get("/api/createAccount");
       if (response.status == 200) {
+        console.log(response.data);
+        localStorage.setItem("myAccount", response.data.account);
+        localStorage.setItem("myBalance", response.data.balance);
         router.push("/main");
       }
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         if (err.response && err.response.data && err.response.data.message) {
           if (err.response.data.message === "Account has already created") {
+            // ? 모달창 필요할듯
             setErrMessage("계좌가 이미 존재합니다. 메인페이지로 이동해주세요");
           } else {
             setErrMessage(err.response.data.message);
