@@ -4,7 +4,7 @@ const publicKey = process.env.PUBLIC_KEY || "jwt-public-key";
 
 // access token(비밀키로 서명)
 export function generateAccess(id: string) {
-  const token = jwt.sign({ userId: id }, privateKey, { algorithm: "RS256", expiresIn: "10m" });
+  const token = jwt.sign({ userId: id }, privateKey, { algorithm: "RS256", expiresIn: "60m" });
   return token;
 }
 // access token검증 - 성공시 decoded된 데이터 반환

@@ -1,15 +1,16 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-export default function Logout() {
+export default function LogoutButton() {
   const router = useRouter();
   const handleLogout = async () => {
     const response = await axios.post("/api/logout");
 
     try {
       if (response.status == 200) {
-        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("accessToken");
         router.push("/");
+        console.log(response.data);
       } else {
         console.log(new Error());
       }

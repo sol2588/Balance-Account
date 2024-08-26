@@ -1,11 +1,14 @@
+"use client";
 import styles from "./MainComponent.module.css";
 import { IoIosAddCircle } from "react-icons/io";
+import LogoutButton from "../common/LogoutButton";
 
 // ! skeleton UI나 loading UI필요
 // ! db에 계좌정보가 있다면 다른 화면 렌더 필요
 export default function MainComponent() {
   return (
     <>
+      <LogoutButton />
       <main className={styles.mainContainer}>
         <section className={styles.makeAccountMenu}>
           <h3 className={styles.title}>
