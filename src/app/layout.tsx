@@ -1,34 +1,22 @@
 "use client";
 
-import { useEffect } from "react";
-import axios from "axios";
 import "./globals.css";
-import "./globals.css";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "@/lib/store/store";
+import AuthCheck from "@/app/authCheck/AuthCheck";
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  useEffect(() => {
-    async function tokenRefresher() {
-      const isLogin = localStorage.getItem("loginState");
-      if (isLogin == "false") {
-        return;
-      }
-      try {
-        const response = await axios.get("/api/auth");
-        const { accessToken } = response.data;
-        localStorage.setItem("accessToken", accessToken);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    const clearId = setInterval(tokenRefresher, 3600000 - 10000);
-    tokenRefresher();
-
-    return () => clearInterval(clearId);
-  }, []);
-
   return (
-    <html lang="ko">
-      <body>{children}</body>
-    </html>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <html lang="ko">
+          <body>
+            <AuthCheck />
+            {children}
+          </body>
+        </html>
+      </PersistGate>
+    </Provider>
   );
 }

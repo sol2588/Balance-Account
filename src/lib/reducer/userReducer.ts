@@ -21,7 +21,7 @@ const userReducer = (state = initialState, action: any): UserProps => {
         userId: action.payload.id,
         accessToken: action.payload.token,
       };
-    case "LOG_OUT":
+    case "LOGOUT_SUCCESS":
       return {
         ...state,
         isLoggedIn: false,

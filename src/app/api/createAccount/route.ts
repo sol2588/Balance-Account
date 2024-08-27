@@ -28,7 +28,13 @@ export async function GET(req: NextRequest) {
 
       // 1-1) 계좌존재하는 경우
       if (accountRef) {
-        return NextResponse.json({ message: "Account has already created" }, { status: 400 });
+        const targetAccountInfo = querySnapshot.docs.map(doc => doc.data());
+        const accountData = {
+          message: "Account has already created",
+          account: targetAccountInfo[0].account,
+          balance: targetAccountInfo[0].balance,
+        };
+        return NextResponse.json(accountData, { status: 400 });
       }
 
       // 1-2) 계좌신규 개설인 경우 user의 db에 독립된 docs 추가

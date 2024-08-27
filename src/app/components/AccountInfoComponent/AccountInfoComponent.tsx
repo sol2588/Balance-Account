@@ -14,7 +14,6 @@ export default function AccountInfoComponent() {
     setAccount(accountInfo ? JSON.parse(accountInfo).account : "");
     setBalance(accountInfo ? JSON.parse(accountInfo).balance : "");
   }, []);
-  console.log(account);
 
   return (
     <>
