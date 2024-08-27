@@ -13,8 +13,8 @@ export default function CreateAccountComponent() {
       const response = await axios.get("/api/createAccount");
       if (response.status == 200) {
         console.log(response.data);
-        localStorage.setItem("myAccount", response.data.account);
-        localStorage.setItem("myBalance", response.data.balance);
+        const myAccount = { account: response.data.account, balance: response.data.balance };
+        localStorage.setItem("accountInfo", JSON.stringify(myAccount));
         router.push("/main");
       }
     } catch (err: unknown) {

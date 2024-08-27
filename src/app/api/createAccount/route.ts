@@ -5,7 +5,6 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { cookies } from "next/headers";
 
 export async function GET(req: NextRequest) {
-  // ! 일단 계좌가 생성되면 다시 생성 못하게 막아주기
   if (req.method == "GET") {
     // 계좌 생성 로직
     const account = () => {
@@ -32,10 +31,10 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ message: "Account has already created" }, { status: 400 });
       }
 
-      // 1-2) 걔좌신규 개설인 경우 user의 db에 독립된 docs 추가
+      // 1-2) 계좌신규 개설인 경우 user의 db에 독립된 docs 추가
       const docRef = doc(collection(db, "users", `user_${userId}`, "account"), `account_${userId}`);
-      await setDoc(docRef, { account: account(), balance: 0 });
-      return NextResponse.json({ account: account(), balance: 0 }, { status: 200 });
+      await setDoc(docRef, { account: account(), balance: "0" });
+      return NextResponse.json({ account: account(), balance: "0" }, { status: 200 });
     } catch (err) {
       console.log(err);
       return NextResponse.json({ message: "Error on CreateAccount" }, { status: 400 });

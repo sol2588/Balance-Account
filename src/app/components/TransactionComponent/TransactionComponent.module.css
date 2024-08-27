@@ -1,0 +1,23 @@
+.accountDetailsContainer {
+}
+.myAccountInfoWrapper {
+}
+.myAccountInfo {
+  padding: 10px;
+  border: 1px solid;
+}
+.recipientAccountInfo {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid;
+}
+.accountInput {
+  border: none;
+  outline: none;
+}
+
+.receiverInfoWrapper {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid;
+}

@@ -9,6 +9,9 @@ export default function LogoutButton() {
     try {
       if (response.status == 200) {
         localStorage.removeItem("accessToken");
+        // ! accountInfo 삭제
+        localStorage.removeItem("accountInfo");
+        localStorage.setItem("loginState", "false");
         router.push("/");
         console.log(response.data);
       } else {

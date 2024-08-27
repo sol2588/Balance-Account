@@ -1,0 +1,23 @@
+.chargeInput {
+  width: 200px;
+  height: 50px;
+  margin-left: 10px;
+  padding-left: 10px;
+  outline: none;
+  border: 0;
+  border-radius: 2rem;
+  background-color: rgb(233, 233, 233);
+  font-size: 1rem;
+}
+
+.button {
+  min-width: 40px;
+  margin: 10px;
+  border: none;
+  border-radius: 2rem;
+  line-height: 2rem;
+  font-size: 1rem;
+  background-color: rgb(145, 196, 229);
+  color: #fff;
+  cursor: pointer;
+}

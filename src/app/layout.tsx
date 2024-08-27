@@ -8,6 +8,10 @@ import "./globals.css";
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   useEffect(() => {
     async function tokenRefresher() {
+      const isLogin = localStorage.getItem("loginState");
+      if (isLogin == "false") {
+        return;
+      }
       try {
         const response = await axios.get("/api/auth");
         const { accessToken } = response.data;
