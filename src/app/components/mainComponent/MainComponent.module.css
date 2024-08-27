@@ -1,24 +1,16 @@
 .mainContainer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90vw;
-  height: 70vh;
-
-  display: flex;
-  gap: 10px;
-  /* justify-content: center;
-    align-items: center; */
+  padding: 40px;
 }
-
+.mainTitle {
+  font-size: 44px;
+  text-align: start;
+}
+.mainContents {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+}
 .sideMenu {
-  border: 10px solid pink;
-  width: 40%;
+  border: 1px solid #626b96;
   border-radius: 10px;
-  height: 100%;
-}
-.accountButton {
-  font-size: 10rem;
-  color: black;
 }

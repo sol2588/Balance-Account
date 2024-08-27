@@ -47,21 +47,48 @@ export default function LoginComponent() {
   return (
     <section className={styles.loginContainer}>
       <header>
-        <h3 className={styles.loginHeader}>로그인</h3>
+        <h3 className={styles.loginHeader}>Login</h3>
       </header>
       <form action="/api/login" method="post" onSubmit={handleSubmit}>
         <fieldset className={styles.loginField}>
-          <legend>로그인정보를 입력하세요</legend>
+          <legend className={styles.loginDesc}>Welcome back! Please login to your account.</legend>
 
-          <label htmlFor="id">아이디</label>
-          <input type="text" id="id" name="id" value={userId} onChange={e => setUserId(e.target.value)} />
+          <label htmlFor="id" className={styles.loginLabel}>
+            User Id
+          </label>
+          <input
+            className={styles.loginInput}
+            type="text"
+            id="id"
+            name="id"
+            value={userId}
+            onChange={e => setUserId(e.target.value)}
+          />
 
-          <label htmlFor="pw">비밀번호</label>
-          <input type="password" id="pw" name="pw" value={pw} onChange={e => setPw(e.target.value)} />
+          <label htmlFor="pw" className={styles.loginLabel}>
+            Password
+          </label>
+          <input
+            className={styles.loginInput}
+            type="password"
+            id="pw"
+            name="pw"
+            value={pw}
+            onChange={e => setPw(e.target.value)}
+          />
         </fieldset>
-        <button type="submit">로그인하기</button>
+        <button className={styles.submitBtn} type="submit">
+          Login
+        </button>
         {message.length && <p>{message}</p>}
       </form>
+
+      <p className={styles.contentsForGuest}>
+        New User?{" "}
+        <button className={styles.guestBtn} onClick={() => router.push("/signup")}>
+          SignUp
+        </button>
+      </p>
     </section>
   );
 }

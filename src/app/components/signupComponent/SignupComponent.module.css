@@ -1,14 +1,43 @@
 .signupContainer {
+  padding: 40px;
+  text-align: start;
 }
 
 .signupHeader {
-  text-align: center;
+  font-size: 44px;
+  text-align: start;
+  margin-bottom: 0;
 }
 
 .signupField {
+  padding: 0;
   margin: 0 auto;
-
+  border: 0;
   display: flex;
   flex-direction: column;
-  width: 50%;
+}
+.signupDesc {
+  color: #9fa2ae;
+  margin: 32px 0;
+}
+.signupLabel {
+  color: #9fa2ae;
+}
+.signupInput {
+  width: 300px;
+  height: 50px;
+  margin: 20px 0;
+  background-color: transparent;
+  border: 1px solid #9fa2ae;
+  border-radius: 8px;
+  outline: none;
+  color: #f9b179;
+}
+.submitBtn {
+  width: 300px;
+  height: 50px;
+  margin: 32px 0;
+  background-color: #f9b179;
+  border: 0;
+  border-radius: 8px;
 }

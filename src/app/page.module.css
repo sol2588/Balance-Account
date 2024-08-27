@@ -1,0 +1,26 @@
+.contentsContainer {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.contentsUser {
+  font-size: 44px;
+  text-align: center;
+}
+
+.contentsGuest {
+  font-size: 44px;
+  text-align: center;
+}
+
+.button {
+  width: 140px;
+  padding: 16px 30px;
+  border-radius: 16px;
+  font-size: 20px;
+  font-weight: 600;
+  border: transparent;
+  background-color: #f9b179;
+}

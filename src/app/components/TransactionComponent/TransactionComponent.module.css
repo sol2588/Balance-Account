@@ -1,29 +1,93 @@
-.accountDetailsContainer {
+/* 
+#2B304D
+#3F4364 
+#626B96
+#F5F5F5
+#EFAA75 
+*/
+
+.transactionContainer {
+  padding: 40px;
 }
-.myAccountInfoWrapper {
+.transactionInfoWrapper {
+}
+.transactionTitle {
+  font-size: 44px;
 }
 .myAccountInfo {
-  padding: 10px;
-  border: 1px solid;
+  padding: 30px;
+  border-radius: 16px;
+  background-color: #3f4364;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 }
-.recipientAccountInfo {
-  margin-top: 10px;
-  padding: 10px;
-  border: 1px solid;
-}
-.accountInput {
-  border: none;
-  outline: none;
+.myAccountNumber,
+.myAccountBalance {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.receiverInfoWrapper {
-  margin-top: 10px;
-  padding: 10px;
-  border: 1px solid;
+.myAccountSubtitle,
+.receiverSubtitle {
+  color: #9fa2ae;
+  font-size: 20px;
+}
+.myAccountSubcontent {
+  margin-bottom: 20px;
+  color: #fff;
+  font-size: 30px;
+  font-weight: 600;
+}
+.receiverWrapper {
+  margin-top: 30px;
+  padding: 30px;
+  border-radius: 16px;
+  background-color: #3f4364;
+}
+.receiverInfo {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+}
+.receiverInfo > select {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #fff;
+  background-color: #626b96;
+  padding: 0.6em 1.4em 0.5em 0.8em;
+  border-radius: 8px;
+  box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+}
+.receiverAccountInput {
+  font-size: 16px;
+  min-width: 300px;
+  outline: none;
+  color: #fff;
+  border: 1px solid #626b96;
+  border-radius: 8px;
+  background-color: transparent;
+}
+.submitBtn {
+  font-size: 16px;
+  width: 100px;
+  border: none;
+  border-radius: 8px;
+  background-color: #f9b179;
+  cursor: pointer;
+}
+
+.sendWrapper {
+  margin-top: 30px;
+  padding: 30px;
+  border-radius: 16px;
+  background-color: #3f4364;
 }
 
 .transferResultWrapper {
-  margin-top: 10px;
-  padding: 10px;
-  border: 1px solid;
+  margin-top: 30px;
+  padding: 30px;
+  border-radius: 16px;
+  background-color: #3f4364;
 }

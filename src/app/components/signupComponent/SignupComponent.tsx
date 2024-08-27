@@ -53,21 +53,59 @@ export default function SignupComponent() {
       </header>
       <form action="/api/signup" method="post" onSubmit={handleSubmit}>
         <fieldset className={styles.signupField}>
-          <legend>회원정보 입력</legend>
-          <label htmlFor="name">성함</label>
-          <input type="text" id="name" name="name" value={userName} onChange={e => setUserName(e.target.value)} />
+          <legend className={styles.signupDesc}>Welcome, Register your account</legend>
+          <label htmlFor="name" className={styles.signupLabel}>
+            Name
+          </label>
+          <input
+            className={styles.signupInput}
+            type="text"
+            id="name"
+            name="name"
+            value={userName}
+            onChange={e => setUserName(e.target.value)}
+          />
 
-          <label htmlFor="id">아이디</label>
-          <input type="text" id="id" name="id" value={userId} onChange={e => setUserId(e.target.value)} />
+          <label htmlFor="id" className={styles.signupLabel}>
+            ID
+          </label>
+          <input
+            className={styles.signupInput}
+            type="text"
+            id="id"
+            name="id"
+            value={userId}
+            onChange={e => setUserId(e.target.value)}
+          />
 
-          <label htmlFor="pw">비밀번호</label>
-          <input type="password" id="pw" name="pw" value={pw} onChange={e => setPw(e.target.value)} />
+          <label htmlFor="pw" className={styles.signupLabel}>
+            Password
+          </label>
+          <input
+            className={styles.signupInput}
+            type="password"
+            id="pw"
+            name="pw"
+            value={pw}
+            onChange={e => setPw(e.target.value)}
+          />
 
-          <label htmlFor="pwChk">비밀번호 확인</label>
-          <input type="password" id="pwChk" name="pwChk" value={pwChk} onChange={e => setPwChk(e.target.value)} />
+          <label htmlFor="pwChk" className={styles.signupLabel}>
+            Password Check
+          </label>
+          <input
+            className={styles.signupInput}
+            type="password"
+            id="pwChk"
+            name="pwChk"
+            value={pwChk}
+            onChange={e => setPwChk(e.target.value)}
+          />
           <p>{pwValid}</p>
         </fieldset>
-        <button type="submit">가입하기</button>
+        <button className={styles.submitBtn} type="submit">
+          가입하기
+        </button>
         {message.length && <p>{message}</p>}
       </form>
     </section>

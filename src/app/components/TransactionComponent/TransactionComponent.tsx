@@ -2,8 +2,8 @@
 
 import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import styles from "./TransActionComponent.module.css";
-import CurrencyInput from "../common/CurruncyInput";
+import styles from "./TransactionComponent.module.css";
+import CurrencyInput from "../common/currencyInput/CurruncyInput";
 import axios from "axios";
 
 interface AccountProps {
@@ -95,16 +95,25 @@ export default function TransActionComponent() {
   ];
 
   return (
-    <section className={styles.accountDetailsContainer}>
-      <div className={styles.myAccountInfoWrapper}>
-        <h3>
-          <span>내 계좌</span> <span>{accountInfo?.account}</span>
-        </h3>
-        <span>잔액</span> <span>{accountInfo?.balance}</span>
+    <section className={styles.transactionContainer}>
+      <div className={styles.transactionInfoWrapper}>
+        <header>
+          <h3 className={styles.transactionTitle}>Transaction</h3>
+        </header>
+        <div className={styles.myAccountInfo}>
+          <div className={styles.myAccountNumber}>
+            <span className={styles.myAccountSubtitle}>YOUR ACCOUNT</span>{" "}
+            <span className={styles.myAccountSubcontent}>{accountInfo?.account}</span>
+          </div>
+          <div className={styles.myAccountBalance}>
+            <span className={styles.myAccountSubtitle}>YOUR BALANCE</span>{" "}
+            <span className={styles.myAccountSubcontent}>{accountInfo?.balance}</span>
+          </div>
+        </div>
       </div>
-      <div className={styles.recipientAccountInfo}>
-        <h4>누구에게 보낼까요?</h4>
-        <div>
+      <div className={styles.receiverWrapper}>
+        <header className={styles.receiverSubtitle}>누구에게 보낼까요?</header>
+        <div className={styles.receiverInfo}>
           <select value={selected} onChange={handleSelect} required>
             {selectList.map(item => (
               <option key={item.value} value={item.value}>
@@ -114,19 +123,19 @@ export default function TransActionComponent() {
           </select>
           <input
             type="text"
-            className={styles.accountInput}
+            className={styles.receiverAccountInput}
             value={inputAccount}
             onChange={handleChange}
             placeholder="계좌번호를 입력하세요"
           />
-          <button onClick={handleButtonClick} disabled={!inputAccount || !selected}>
+          <button className={styles.submitBtn} onClick={handleButtonClick} disabled={!inputAccount || !selected}>
             다음
           </button>
         </div>
         {message && <p>{message}</p>}
       </div>
       {targetInfo.receiver && (
-        <div className={styles.receiverInfoWrapper}>
+        <div className={styles.sendWrapper}>
           <div className={styles.target}>
             <span>{targetInfo.receiver}님께</span> <span>{targetInfo.account}</span> <span>{targetInfo.bank}</span>
           </div>

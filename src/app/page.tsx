@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import styles from "./page.module.css";
 
 interface Props {
   id: string;
@@ -15,11 +16,19 @@ export default function Home() {
     router.push("/signup");
   };
   return (
-    <div>
-      <p>BalanceAccount 회원인 경우</p>
-      <button onClick={handleLogin}>로그인</button>
-      <p>아직 BalanceAccount 회원이 아닌 경우</p>
-      <button onClick={handleSignup}>회원가입</button>
-    </div>
+    <section className={styles.contentsContainer}>
+      <div className={styles.contentsUser}>
+        <p>사용자는</p>
+        <button className={styles.button} onClick={handleLogin}>
+          로그인
+        </button>
+      </div>
+      <div className={styles.contentsGuest}>
+        <p>사용하고 싶다면</p>
+        <button className={styles.button} onClick={handleSignup}>
+          회원가입
+        </button>
+      </div>
+    </section>
   );
 }

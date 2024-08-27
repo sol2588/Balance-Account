@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import styles from "./ChargeComponent.module.css";
-import CurrencyInput from "../common/CurruncyInput";
+import CurrencyInput from "../common/currencyInput/CurruncyInput";
 
 interface setFunction {
   setMoney: React.Dispatch<React.SetStateAction<string>>;
