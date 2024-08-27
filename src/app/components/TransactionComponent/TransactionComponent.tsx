@@ -1,8 +1,9 @@
 "use client";
 
 import { ChangeEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./TransActionComponent.module.css";
-import CurrencyInput from "@/app/components/common/CurruncyInput";
+import CurrencyInput from "../common/CurruncyInput";
 import axios from "axios";
 
 interface AccountProps {
@@ -17,12 +18,14 @@ interface TargetInfoProps {
 }
 
 export default function TransActionComponent() {
+  const router = useRouter();
+
   const [accountInfo, setAccountInfo] = useState<AccountProps | undefined>();
   const [inputAccount, setInputAccount] = useState<string>();
   const [message, setMessage] = useState<string>();
   const [selected, setSelected] = useState<string>();
   const [money, setMoney] = useState<string>();
-  const [inputCurrency, setInputCurrency] = useState<string>();
+  const [transferRst, setTransferRst] = useState<boolean>(false);
   const [targetInfo, setTargetInfo] = useState<TargetInfoProps>({
     receiver: "",
     account: "",
@@ -46,7 +49,7 @@ export default function TransActionComponent() {
   };
   const handleButtonClick = async () => {
     try {
-      const response = await axios.post("/api/transaction", { inputAccount, selected });
+      const response = await axios.post("/api/transaction", { inputAccount, selected, action: "checkAccount" });
       if (response.status == 200) {
         const { targetUser, targetAccount, targetBank, targetAmount } = response.data;
         setTargetInfo({
@@ -56,12 +59,30 @@ export default function TransActionComponent() {
           bank: targetBank,
           transferAmount: targetAmount,
         });
-      } else {
-        console.log("Error");
+      }
+    } catch (err: any) {
+      if (err.response) {
+        setMessage(err.response.data.message);
+      }
+    }
+  };
+
+  const handleClickTransfer = async () => {
+    try {
+      const response = await axios.post("/api/transaction", { action: "transfer", money });
+      if (response.status == 200) {
+        const { account, balance } = response.data.responseData;
+        localStorage.setItem("accountInfo", JSON.stringify({ account: account, balance: balance }));
+        setAccountInfo({ account: account, balance: balance });
+        setTransferRst(true);
       }
     } catch (err) {
-      console.log("Error ", err);
+      return err;
     }
+  };
+
+  const handleClickToMain = () => {
+    router.push("/main");
   };
 
   const selectList = [
@@ -109,7 +130,18 @@ export default function TransActionComponent() {
           <div className={styles.target}>
             <span>{targetInfo.receiver}님께</span> <span>{targetInfo.account}</span> <span>{targetInfo.bank}</span>
           </div>
-          <CurrencyInput value={inputCurrency} setMoney={setMoney} />
+          <CurrencyInput value={money} setMoney={setMoney} />
+          <div>
+            <button onClick={handleClickTransfer}>송금하기</button>
+            <button onClick={handleClickToMain}>메인 페이지로 돌아가기</button>
+          </div>
+        </div>
+      )}
+      {transferRst && (
+        <div className={styles.transferResultWrapper}>
+          <div>
+            {targetInfo.receiver}님께 {money}을 보냈습니다.
+          </div>
         </div>
       )}
     </section>
