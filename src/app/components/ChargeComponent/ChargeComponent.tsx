@@ -50,18 +50,31 @@ export default function ChargeComponent() {
   };
 
   return (
-    <section className={styles.myAccount}>
-      <div className={styles.accountWrapper}>
-        <h3>
-          <span>내 계좌</span> <span>{account}</span>
-        </h3>
-        <span>잔액</span> <span>{balance}</span>
+    <section className={styles.chargeContainer}>
+      <div className={styles.chargeInfoWrapper}>
+        <header>
+          <h3 className={styles.chargeInfoTitle}>Charge</h3>
+        </header>
+        <div className={styles.chargeInfo}>
+          <div className={styles.chargeAccount}>
+            <span className={styles.chargeAccountSubtitle}>YOUR ACCOUNT</span>{" "}
+            <span className={styles.chargeAccountSubcontent}>{account}</span>
+          </div>
+          <div className={styles.chargeBalance}>
+            <span className={styles.chargeBalanceSubtitle}>YOUR BALANCE</span>{" "}
+            <span className={styles.chargeAccountSubcontent}>{balance}</span>
+          </div>
+        </div>
       </div>
-      <div className={styles.chargeWrapper}>
+      <div className={styles.chargeDataWrapper}>
         <CurrencyInput value={chargeAmount} setMoney={setChargeAmount} />
         <div>
-          <button onClick={handleClickCharge}>충전하기</button>
-          <button onClick={handleClickToMain}>메인 페이지로 돌아가기</button>
+          <button className={styles.commonBtn} onClick={handleClickCharge}>
+            충전하기
+          </button>
+          <button className={styles.commonBtn} onClick={handleClickToMain}>
+            메인 페이지로 돌아가기
+          </button>
         </div>
       </div>
     </section>

@@ -1,18 +1,26 @@
+.createContainer {
+  padding: 40px;
+}
 .title {
-  font-size: 3rem;
+  font-size: 44px;
+  text-align: start;
 }
 .featList {
   display: flex;
+  flex-direction: column;
   list-style: none;
   padding: 0;
 }
 .featItem {
-  word-break: break-word;
+  margin: 16px 0;
+  font-size: 20px;
 }
 .button {
+  padding: 16px 30px;
+  border-radius: 16px;
+  font-size: 20px;
+  font-weight: 600;
+  border: transparent;
+  background-color: #f9b179;
   cursor: pointer;
-  padding: 0.5rem 1rem;
-  font-size: 1.5rem;
-  border: 1px solid skyblue;
-  background-color: transparent;
 }

@@ -1,5 +1,33 @@
-.chargeWrapper {
-  margin-top: 2rem;
+.chargeContainer {
+  padding: 40px;
+}
+.chargeInfoTitle {
+  font-size: 44px;
+}
+.chargeInfo {
+  padding: 30px;
+  border-radius: 16px;
+  background-color: #3f4364;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+.chargeAccount,
+.chargeBalance {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.chargeAccountSubtitle,
+.chargeBalanceSubcontent {
+  color: #9fa2ae;
+  font-size: 20px;
+}
+.chargeAccountSubcontent {
+  margin-bottom: 20px;
+  color: #fff;
+  font-size: 30px;
+  font-weight: 600;
 }
 .visuallyHidden {
   position: absolute;
@@ -11,4 +39,20 @@
   clip: rect(0, 0, 0, 0);
   overflow: hidden;
   white-space: nowrap;
+}
+
+.chargeDataWrapper {
+  margin-top: 30px;
+  padding: 30px;
+  border-radius: 16px;
+  background-color: #3f4364;
+}
+.commonBtn {
+  font-size: 20px;
+  padding: 10px 20px;
+  margin-right: 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #f9b179;
+  cursor: pointer;
 }

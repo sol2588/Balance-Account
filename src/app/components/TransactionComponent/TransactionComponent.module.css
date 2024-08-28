@@ -64,10 +64,9 @@
   font-size: 16px;
   min-width: 300px;
   outline: none;
-  color: #fff;
-  border: 1px solid #626b96;
+  border: none;
   border-radius: 8px;
-  background-color: transparent;
+  background-color: rgb(233, 233, 233);
 }
 .submitBtn {
   font-size: 16px;
@@ -78,11 +77,38 @@
   cursor: pointer;
 }
 
-.sendWrapper {
+.targetWrapper {
   margin-top: 30px;
   padding: 30px;
   border-radius: 16px;
   background-color: #3f4364;
+}
+.targetAccountInfo {
+  display: flex;
+  flex-direction: column;
+  color: #9fa2ae;
+}
+.targetReceiver {
+  font-size: 20;
+}
+.targetAccountBank {
+  font-size: 20;
+}
+.targetAmount {
+  font-size: 30px;
+  font-weight: 600;
+  margin-top: 20px;
+  color: #fff;
+}
+
+.commonBtn {
+  font-size: 20px;
+  padding: 10px 20px;
+  margin-right: 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #f9b179;
+  cursor: pointer;
 }
 
 .transferResultWrapper {
@@ -90,4 +116,9 @@
   padding: 30px;
   border-radius: 16px;
   background-color: #3f4364;
+}
+
+.transferResult {
+  color: #9fa2ae;
+  font-size: 30px;
 }

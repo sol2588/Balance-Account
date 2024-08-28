@@ -1,23 +1,35 @@
 .chargeInput {
-  width: 200px;
+  font-size: 16px;
+  min-width: 300px;
   height: 50px;
-  margin-left: 10px;
-  padding-left: 10px;
+  margin: 20px 0;
   outline: none;
-  border: 0;
-  border-radius: 2rem;
+  border: none;
+  border-radius: 8px;
   background-color: rgb(233, 233, 233);
-  font-size: 1rem;
 }
 
 .button {
-  min-width: 40px;
-  margin: 10px;
+  font-size: 16px;
+  line-height: 1.5;
+  width: 70px;
+  margin: 0 10px 20px 0;
+  padding: 10px 0;
   border: none;
   border-radius: 2rem;
-  line-height: 2rem;
-  font-size: 1rem;
-  background-color: rgb(145, 196, 229);
   color: #fff;
+  background-color: #626b96;
+  box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
   cursor: pointer;
+}
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  overflow: hidden;
+  white-space: nowrap;
 }

@@ -49,7 +49,8 @@ export default function TransActionComponent() {
   };
   const handleButtonClick = async () => {
     try {
-      const response = await axios.post("/api/transaction", { inputAccount, selected, action: "checkAccount" });
+      const extractAccount = inputAccount?.replaceAll("-", "");
+      const response = await axios.post("/api/transaction", { extractAccount, selected, action: "checkAccount" });
       if (response.status == 200) {
         const { targetUser, targetAccount, targetBank, targetAmount } = response.data;
         setTargetInfo({
@@ -135,22 +136,30 @@ export default function TransActionComponent() {
         {message && <p>{message}</p>}
       </div>
       {targetInfo.receiver && (
-        <div className={styles.sendWrapper}>
-          <div className={styles.target}>
-            <span>{targetInfo.receiver}님께</span> <span>{targetInfo.account}</span> <span>{targetInfo.bank}</span>
+        <div className={styles.targetWrapper}>
+          <div className={styles.targetAccountInfo}>
+            <span className={styles.targetReceiver}>{targetInfo.receiver}님</span>
+            <span className={styles.targetAccountBank}>
+              {targetInfo.bank} {targetInfo.account}
+            </span>
+            <span className={styles.targetAmount}>얼마를 보내시겠습니까?</span>
           </div>
           <CurrencyInput value={money} setMoney={setMoney} />
           <div>
-            <button onClick={handleClickTransfer}>송금하기</button>
-            <button onClick={handleClickToMain}>메인 페이지로 돌아가기</button>
+            <button className={styles.commonBtn} onClick={handleClickTransfer}>
+              송금하기
+            </button>
+            <button className={styles.commonBtn} onClick={handleClickToMain}>
+              메인페이지로 돌아가기
+            </button>
           </div>
         </div>
       )}
       {transferRst && (
         <div className={styles.transferResultWrapper}>
-          <div>
+          <p className={styles.transferResult}>
             {targetInfo.receiver}님께 {money}을 보냈습니다.
-          </div>
+          </p>
         </div>
       )}
     </section>

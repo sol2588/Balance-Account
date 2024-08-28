@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
 export async function POST(req: NextRequest) {
   if (req.method == "POST") {
     try {
-      const { inputAccount, selected, money, action } = await req.json();
+      const { extractAccount, selected, money, action } = await req.json();
       if (action === "checkAccount") {
         // db에서 계좌 정보 가져오기
         const querySanpshot = await getDocs(collection(db, "accountsInfo"));
@@ -16,12 +16,12 @@ export async function POST(req: NextRequest) {
 
         const matchedData = accountsInfoData.find(
           data =>
-            data.account && data.bank && data.account.replaceAll("-", "") == inputAccount && data.bank == selected,
+            data.account && data.bank && data.account.replaceAll("-", "") == extractAccount && data.bank == selected,
         );
 
         // 1) 계좌 & 은행명이 일치하는 경우 : 보낼 금액은 0원
         if (matchedData) {
-          const targetData = accountsInfoData.find(data => data.account.replaceAll("-", "") == inputAccount);
+          const targetData = accountsInfoData.find(data => data.account.replaceAll("-", "") == extractAccount);
           const targetInfo = targetData && {
             targetUser: targetData.owner,
             targetAccount: targetData.account,
@@ -50,7 +50,10 @@ export async function POST(req: NextRequest) {
           balance: (originAmount - transferMoney).toLocaleString("ko-KR"),
         };
 
-        await setDoc(docRef, { ...userAccountInfo, balance: (originAmount - transferMoney).toLocaleString("ko-KR") });
+        await setDoc(docRef, {
+          ...userAccountInfo,
+          balance: (originAmount - transferMoney).toLocaleString("ko-KR"),
+        });
         return NextResponse.json({ responseData }, { status: 200 });
       }
 

@@ -55,9 +55,9 @@ export default function CreateAccountComponent() {
   };
 
   return (
-    <>
+    <section className={styles.createContainer}>
       <header>
-        <h3 className={styles.title}>Balance Account 입출금 통장</h3>
+        <h3 className={styles.title}>Create Account</h3>
       </header>
       <ul className={styles.featList}>
         <li className={styles.featItem}>첫 사용자도 손쉬운 사용</li>
@@ -69,6 +69,6 @@ export default function CreateAccountComponent() {
       <button className={styles.button} onClick={handleButton}>
         사용해보기
       </button>
-    </>
+    </section>
   );
 }
