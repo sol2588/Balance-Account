@@ -4,42 +4,70 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { cookies } from "next/headers";
 
+type TargetInfo =
+  | {
+      targetUser: string;
+      targetAccount: string;
+      targetBank: string;
+      targetAmount: string;
+      targetStatus: number;
+    }
+  | undefined;
+
 export async function POST(req: NextRequest) {
   if (req.method == "POST") {
     try {
-      const { extractAccount, selected, money, action } = await req.json();
+      // 1) userId 찾기
+      const cookieStore = cookies();
+      const getUserData = cookieStore.get("refreshToken")?.value;
+      const decoded = getUserData ? jwt.verify(getUserData, process.env.PRIVATE_KEY as string) : "";
+      const { userId } = decoded as JwtPayload;
+
+      // 2) 사용자의 최근 송금 내역 조회
+      const q = query(collection(db, "users", `user_${userId}`, "recentTransaction"));
+      const querySnapshot = await getDocs(q);
+      const recentData = querySnapshot.docs.map(doc => doc.data());
+
+      const { extractAccount, selected, targetInfo, money, action } = await req.json();
       if (action === "checkAccount") {
         // db에서 계좌 정보 가져오기
         const querySanpshot = await getDocs(collection(db, "accountsInfo"));
         const accountsInfoData = querySanpshot.docs.map(data => data.data());
-        // db의 계좌정보가 사용자가 입력한 계좌&은행과 일치하는 지 확인
 
+        // db의 계좌정보가 사용자가 입력한 계좌&은행과 일치하는 지 확인
         const matchedData = accountsInfoData.find(
           data =>
             data.account && data.bank && data.account.replaceAll("-", "") == extractAccount && data.bank == selected,
         );
 
-        // 1) 계좌 & 은행명이 일치하는 경우 : 보낼 금액은 0원
+        // 3) 계좌 & 은행명이 일치하는 경우 : 보낼 금액은 0원
         if (matchedData) {
           const targetData = accountsInfoData.find(data => data.account.replaceAll("-", "") == extractAccount);
-          const targetInfo = targetData && {
+
+          let updateTargetInfo: TargetInfo = targetData && {
             targetUser: targetData.owner,
             targetAccount: targetData.account,
             targetBank: targetData.bank,
             targetAmount: "0",
+            targetStatus: 0,
           };
-          return NextResponse.json({ ...targetInfo }, { status: 200 });
+
+          // 4) 송금하려는 계좌와 일치하는 최근 송금 데이터를 배열로 받아오기 : 기존거래가 있는 경우 targetStatus 갱신
+          const findTargetAccount = recentData.filter(data => data.account.replaceAll("-", "") == extractAccount);
+          if (!querySnapshot.empty && updateTargetInfo) {
+            updateTargetInfo = { ...updateTargetInfo, targetStatus: findTargetAccount.length };
+          }
+
+          // 5) 사용자의 지인(friend) 내역 가져오기
+
+          return NextResponse.json({ ...updateTargetInfo }, { status: 200 });
         }
       } else if (action == "transfer") {
-        const cookieStore = cookies();
-        const getUserData = cookieStore.get("refreshToken")?.value;
-
         if (!getUserData) {
-          return NextResponse.json({ message: "Unauthozired, no token" }, { status: 400 });
+          return NextResponse.json({ message: "Unauthorized, no token" }, { status: 400 });
         }
-        const decoded = jwt.verify(getUserData, process.env.PRIVATE_KEY as string);
-        const { userId } = decoded as JwtPayload;
 
+        // 본인 계좌 account db의 balance 갱신
         const docRef = doc(collection(db, "users", `user_${userId}`, "account"), `account_${userId}`);
         const userAccountInfo = (await getDoc(docRef)).data();
         const originAmount = Number(userAccountInfo?.balance.replaceAll(",", ""));
@@ -49,11 +77,24 @@ export async function POST(req: NextRequest) {
           ...userAccountInfo,
           balance: (originAmount - transferMoney).toLocaleString("ko-KR"),
         };
-
         await setDoc(docRef, {
           ...userAccountInfo,
           balance: (originAmount - transferMoney).toLocaleString("ko-KR"),
         });
+
+        // 송금할때 마다 최근 송금내역 저장(recentTransaction db 추가)
+        const num = recentData.length + 1;
+
+        const recentRef = doc(collection(db, "users", `user_${userId}`, "recentTransaction"), `recent_${num}`);
+        await setDoc(recentRef, {
+          idx: num,
+          date: new Date(),
+          account: targetInfo.account,
+          name: targetInfo.receiver,
+          bank: targetInfo.bank,
+          sendMoney: money,
+        });
+
         return NextResponse.json({ responseData }, { status: 200 });
       }
 

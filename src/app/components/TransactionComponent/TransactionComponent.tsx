@@ -15,6 +15,7 @@ interface TargetInfoProps {
   account: string;
   bank: string;
   transferAmount: string;
+  transferStatus: number;
 }
 
 export default function TransActionComponent() {
@@ -31,6 +32,7 @@ export default function TransActionComponent() {
     account: "",
     bank: "",
     transferAmount: "",
+    transferStatus: 0,
   });
 
   useEffect(() => {
@@ -52,13 +54,14 @@ export default function TransActionComponent() {
       const extractAccount = inputAccount?.replaceAll("-", "");
       const response = await axios.post("/api/transaction", { extractAccount, selected, action: "checkAccount" });
       if (response.status == 200) {
-        const { targetUser, targetAccount, targetBank, targetAmount } = response.data;
+        const { targetUser, targetAccount, targetBank, targetAmount, targetStatus } = response.data;
         setTargetInfo({
           ...targetInfo,
           receiver: targetUser,
           account: targetAccount,
           bank: targetBank,
           transferAmount: targetAmount,
+          transferStatus: targetStatus,
         });
       }
     } catch (err: any) {
@@ -70,7 +73,7 @@ export default function TransActionComponent() {
 
   const handleClickTransfer = async () => {
     try {
-      const response = await axios.post("/api/transaction", { action: "transfer", money });
+      const response = await axios.post("/api/transaction", { action: "transfer", targetInfo, money });
       if (response.status == 200) {
         const { account, balance } = response.data.responseData;
         localStorage.setItem("accountInfo", JSON.stringify({ account: account, balance: balance }));
@@ -132,6 +135,7 @@ export default function TransActionComponent() {
           <button className={styles.submitBtn} onClick={handleButtonClick} disabled={!inputAccount || !selected}>
             다음
           </button>
+          {targetInfo.receiver && <p>{targetInfo.transferStatus}번 거래 했습니다.</p>}
         </div>
         {message && <p>{message}</p>}
       </div>

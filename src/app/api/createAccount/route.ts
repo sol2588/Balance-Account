@@ -40,6 +40,7 @@ export async function GET(req: NextRequest) {
       // 1-2) 계좌신규 개설인 경우 user의 db에 독립된 docs 추가
       const docRef = doc(collection(db, "users", `user_${userId}`, "account"), `account_${userId}`);
       await setDoc(docRef, { account: account(), balance: "0" });
+
       return NextResponse.json({ account: account(), balance: "0" }, { status: 200 });
     } catch (err) {
       console.log(err);
