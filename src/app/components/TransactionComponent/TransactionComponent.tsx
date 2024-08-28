@@ -27,6 +27,7 @@ export default function TransActionComponent() {
   const [selected, setSelected] = useState<string>();
   const [money, setMoney] = useState<string>();
   const [transferRst, setTransferRst] = useState<boolean>(false);
+  const [overBalanceMsg, setOverBalanceMsg] = useState<string>();
   const [targetInfo, setTargetInfo] = useState<TargetInfoProps>({
     receiver: "",
     account: "",
@@ -35,12 +36,23 @@ export default function TransActionComponent() {
     transferStatus: 0,
   });
 
+  // ! dispatch로 accountInfo 갱신 필요
   useEffect(() => {
     const storageItem = localStorage.getItem("accountInfo");
     if (storageItem) {
       setAccountInfo(JSON.parse(storageItem));
     }
-  }, []);
+
+    // !  금액 합당시 비활성화 해제 & 빨간버튼
+    const needBalance = Number(money?.replaceAll(",", ""));
+    const realBalance = Number(accountInfo?.balance.replaceAll(",", ""));
+    if (needBalance > realBalance) {
+      console.log(needBalance);
+      setOverBalanceMsg(`잔액이 부족합니다. 보낼 수 있는 금액은 ${realBalance.toLocaleString("ko-KR")}원 입니다.`);
+    } else {
+      setOverBalanceMsg("");
+    }
+  }, [money]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputAccount(e.target.value);
@@ -135,7 +147,11 @@ export default function TransActionComponent() {
           <button className={styles.submitBtn} onClick={handleButtonClick} disabled={!inputAccount || !selected}>
             다음
           </button>
-          {targetInfo.receiver && <p>{targetInfo.transferStatus}번 거래 했습니다.</p>}
+          {targetInfo.receiver && (
+            <p className={targetInfo.transferStatus == 0 ? styles.warningStatus : styles.informStatus}>
+              {targetInfo.transferStatus}번째 거래 입니다.
+            </p>
+          )}
         </div>
         {message && <p>{message}</p>}
       </div>
@@ -150,11 +166,16 @@ export default function TransActionComponent() {
           </div>
           <CurrencyInput value={money} setMoney={setMoney} />
           <div>
-            <button className={styles.commonBtn} onClick={handleClickTransfer}>
+            {overBalanceMsg && <p className={styles.warningStatus}>{overBalanceMsg}</p>}
+            <button
+              className={styles.commonBtn}
+              onClick={handleClickTransfer}
+              disabled={overBalanceMsg != "" || !money}
+            >
               송금하기
             </button>
             <button className={styles.commonBtn} onClick={handleClickToMain}>
-              메인페이지로 돌아가기
+              송금 취소
             </button>
           </div>
         </div>

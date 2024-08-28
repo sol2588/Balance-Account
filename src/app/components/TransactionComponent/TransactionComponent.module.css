@@ -122,3 +122,11 @@
   color: #9fa2ae;
   font-size: 30px;
 }
+.zeroStatus {
+  color: rgb(231, 83, 83);
+  font-size: 16px;
+}
+.informStatus {
+  font-size: 16px;
+  color: rgb(93, 168, 238);
+}
