@@ -5,6 +5,10 @@ import { useRouter } from "next/navigation";
 import styles from "./TransactionComponent.module.css";
 import CurrencyInput from "../common/currencyInput/CurruncyInput";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/lib/reducer";
+import { modalOpen, modalClose } from "@/lib/actions/modalActions";
+import Modal from "../common/modal/Modal";
 
 interface AccountProps {
   account: string;
@@ -15,11 +19,12 @@ interface TargetInfoProps {
   account: string;
   bank: string;
   transferAmount: string;
-  transferStatus: number;
+  transferStatus: number | null;
 }
 
 export default function TransActionComponent() {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const [accountInfo, setAccountInfo] = useState<AccountProps | undefined>();
   const [inputAccount, setInputAccount] = useState<string>();
@@ -33,8 +38,12 @@ export default function TransActionComponent() {
     account: "",
     bank: "",
     transferAmount: "",
-    transferStatus: 0,
+    transferStatus: null,
   });
+
+  useEffect(() => {
+    dispatch(modalOpen({ title: "최초 거래입니다. 확인 후 송금 진행바랍니다." }));
+  }, [targetInfo.transferStatus]);
 
   // ! dispatch로 accountInfo 갱신 필요
   useEffect(() => {
@@ -53,6 +62,8 @@ export default function TransActionComponent() {
       setOverBalanceMsg("");
     }
   }, [money]);
+
+  const modalState = useSelector((state: RootState) => state.modal.isOpen);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputAccount(e.target.value);
@@ -144,14 +155,22 @@ export default function TransActionComponent() {
             onChange={handleChange}
             placeholder="계좌번호를 입력하세요"
           />
-          <button className={styles.submitBtn} onClick={handleButtonClick} disabled={!inputAccount || !selected}>
+          <button
+            className={styles.submitBtn}
+            onClick={() => {
+              handleButtonClick();
+            }}
+            disabled={!inputAccount || !selected}
+          >
             다음
           </button>
+          {modalState && targetInfo.transferStatus == 0 && <Modal />}
           {targetInfo.receiver && (
             <p className={targetInfo.transferStatus == 0 ? styles.warningStatus : styles.informStatus}>
               {targetInfo.transferStatus}번째 거래 입니다.
             </p>
           )}
+          {targetInfo.transferStatus == 0 && <Modal />}
         </div>
         {message && <p>{message}</p>}
       </div>

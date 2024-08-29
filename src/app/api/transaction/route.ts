@@ -10,7 +10,7 @@ type TargetInfo =
       targetAccount: string;
       targetBank: string;
       targetAmount: string;
-      targetStatus: number;
+      targetStatus: number | undefined;
     }
   | undefined;
 
@@ -33,21 +33,21 @@ export async function POST(req: NextRequest) {
         // db에서 계좌 정보 가져오기
         const querySanpshot = await getDocs(collection(db, "accountsInfo"));
         const accountsInfoData = querySanpshot.docs.map(data => data.data());
+        console.log(extractAccount);
 
         // db의 계좌정보가 사용자가 입력한 계좌&은행과 일치하는 지 확인
         const matchedData = accountsInfoData.find(
           data =>
             data.account && data.bank && data.account.replaceAll("-", "") == extractAccount && data.bank == selected,
         );
-
         // 3) 계좌 & 은행명이 일치하는 경우 : 보낼 금액은 0원
         if (matchedData) {
-          const targetData = accountsInfoData.find(data => data.account.replaceAll("-", "") == extractAccount);
+          // const targetData = accountsInfoData.find(data => data.account.replaceAll("-", "") == extractAccount);
 
-          let updateTargetInfo: TargetInfo = targetData && {
-            targetUser: targetData.owner,
-            targetAccount: targetData.account,
-            targetBank: targetData.bank,
+          let updateTargetInfo: TargetInfo = {
+            targetUser: matchedData.owner,
+            targetAccount: matchedData.account,
+            targetBank: matchedData.bank,
             targetAmount: "0",
             targetStatus: 0,
           };
