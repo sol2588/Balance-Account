@@ -90,20 +90,52 @@
   flex-direction: column;
   color: #9fa2ae;
 }
-.targetReceiver {
-  font-size: 20;
-}
+.targetReceiver,
 .targetAccountBank {
   font-size: 20;
 }
-.targetAmount {
+
+.targetDatas {
+  max-width: 1000px;
+  display: flex;
+  justify-content: space-between;
+}
+.targetMoney {
+  display: flex;
+  flex-direction: column;
+}
+.targetAmount,
+.purposeTitle {
   font-size: 30px;
   font-weight: 600;
   margin-top: 20px;
   color: #fff;
 }
 
-.commonBtn {
+/* 거래 목적 */
+.targetPurpose {
+  display: flex;
+  flex-direction: column;
+}
+.choosePurpose {
+}
+.purposeBtn {
+  margin: 20px 10px 20px 0;
+  padding: 10px 12px;
+  font-size: 16px;
+  line-height: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #f9b179;
+  cursor: pointer;
+}
+
+.chooseBtnWrapper {
+  max-width: 1000px;
+  display: flex;
+  justify-content: space-between;
+}
+.chooseBtn {
   font-size: 20px;
   padding: 10px 20px;
   margin-right: 20px;

@@ -11,6 +11,7 @@ type TargetInfo =
       targetBank: string;
       targetAmount: string;
       targetStatus: number | undefined;
+      targetPurpose: string;
     }
   | undefined;
 
@@ -20,10 +21,15 @@ export async function POST(req: NextRequest) {
       // 1) userId 찾기
       const cookieStore = cookies();
       const getUserData = cookieStore.get("refreshToken")?.value;
+
+      if (!getUserData) {
+        return NextResponse.json({ message: "Unauthorized, no token" }, { status: 400 });
+      }
       const decoded = getUserData ? jwt.verify(getUserData, process.env.PRIVATE_KEY as string) : "";
       const { userId } = decoded as JwtPayload;
 
-      const { extractAccount, selected, targetInfo, money, action } = await req.json();
+      const { extractAccount, selected, targetInfo, money, action, purpose } = await req.json();
+
       if (action === "checkAccount") {
         // 2) db에서 계좌 정보 가져오기 - where로 필터링(사용자가 입력한 계좌&은행과 일치하는 지 확인)
         const accountsQuery = query(
@@ -34,6 +40,7 @@ export async function POST(req: NextRequest) {
         const accountsSnapshot = await getDocs(accountsQuery);
         const matchedData = accountsSnapshot.docs.map(doc => doc.data()).find(data => data.account == extractAccount);
 
+        console.log(purpose);
         if (matchedData) {
           let updateTargetInfo: TargetInfo = {
             targetUser: matchedData.owner,
@@ -41,6 +48,7 @@ export async function POST(req: NextRequest) {
             targetBank: matchedData.bank,
             targetAmount: "0",
             targetStatus: 0,
+            targetPurpose: purpose,
           };
 
           // 3) 송금하려는 계좌와 일치하는 최근 송금 데이터의 사이즈 : 기존거래가 있는 경우 targetStatus 갱신
@@ -49,24 +57,27 @@ export async function POST(req: NextRequest) {
             where("account", "==", extractAccount),
           );
           const recentSnapshot = await getDocs(recentQuery);
-          console.log("문서 개수가 몇개니?", recentSnapshot.size);
           // 문서가 있는 경우, 문서 수를 계산하여 targetStatus 갱신
           if (!recentSnapshot.empty) {
             updateTargetInfo.targetStatus = recentSnapshot.size + 1;
           }
-          // 5) 사용자의 지인(friend) 내역 가져오기
-
           return NextResponse.json({ ...updateTargetInfo }, { status: 200 });
+        } else {
+          return NextResponse.json(
+            { message: "계좌정보가 올바르지 않습니다. 확인하여 입력바랍니다." },
+            { status: 400 },
+          );
         }
       } else if (action == "transfer") {
-        if (!getUserData) {
-          return NextResponse.json({ message: "Unauthorized, no token" }, { status: 400 });
-        }
-
         // 본인 계좌 account db의 balance 가져오기
         const userDocRef = doc(collection(db, "users", `user_${userId}`, "account"), `account_${userId}`);
         const userDoc = await getDoc(userDocRef);
         const userAccountInfo = userDoc.data();
+
+        if (!userAccountInfo) {
+          return NextResponse.json({ message: "Account not found" }, { status: 404 });
+        }
+
         const originAmount = Number(userAccountInfo?.balance.replaceAll(",", ""));
         const transferMoney = Number(money.replaceAll(",", ""));
 
@@ -88,6 +99,7 @@ export async function POST(req: NextRequest) {
           name: targetInfo.receiver,
           bank: targetInfo.bank,
           sendMoney: money,
+          purpose: purpose,
         });
 
         return NextResponse.json(
@@ -101,8 +113,6 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // 4-2. 클라이언트에서 지인 추가 하기전에 송금한 이력이 없다면
-
       // 6. 다시 송금을 하겠다고 호출을 하는 경우에 targetAmount의 값을 바꿔주기(지금 아님!)
 
       return NextResponse.json({ message: "계좌정보가 올바르지 않습니다. 확인하여 입력바랍니다." }, { status: 400 });
@@ -112,3 +122,4 @@ export async function POST(req: NextRequest) {
     }
   }
 }
+``;

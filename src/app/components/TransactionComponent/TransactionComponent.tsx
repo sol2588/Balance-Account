@@ -1,14 +1,16 @@
 "use client";
 
-import { ChangeEvent, useEffect, useState } from "react";
+import { MouseEvent, ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./TransactionComponent.module.css";
 import CurrencyInput from "../common/currencyInput/CurruncyInput";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/lib/reducer";
-import { modalOpen, modalClose } from "@/lib/actions/modalActions";
+import { modalOpen } from "@/lib/actions/modalActions";
 import Modal from "../common/modal/Modal";
+import { SELECT_BANK } from "@/utils/data/selectBank";
+import { BUTTON_TYPES } from "@/utils/data/buttonTypes";
 
 interface AccountProps {
   account: string;
@@ -40,6 +42,7 @@ export default function TransActionComponent() {
     transferAmount: "",
     transferStatus: null,
   });
+  const [purpose, setPurpose] = useState<string>();
 
   useEffect(() => {
     dispatch(modalOpen({ title: "최초 거래입니다. 확인 후 송금 진행바랍니다." }));
@@ -65,13 +68,6 @@ export default function TransActionComponent() {
 
   const modalState = useSelector((state: RootState) => state.modal.isOpen);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputAccount(e.target.value);
-  };
-
-  const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelected(e.target.value);
-  };
   const handleButtonClick = async () => {
     try {
       const extractAccount = inputAccount?.replaceAll("-", "");
@@ -96,7 +92,7 @@ export default function TransActionComponent() {
 
   const handleClickTransfer = async () => {
     try {
-      const response = await axios.post("/api/transaction", { action: "transfer", targetInfo, money });
+      const response = await axios.post("/api/transaction", { action: "transfer", targetInfo, money, purpose });
       if (response.status == 200) {
         const { account, balance } = response.data.responseData;
         localStorage.setItem("accountInfo", JSON.stringify({ account: account, balance: balance }));
@@ -107,19 +103,6 @@ export default function TransActionComponent() {
       return err;
     }
   };
-
-  const handleClickToMain = () => {
-    router.push("/main");
-  };
-
-  const selectList = [
-    { value: "none", name: "===선택===" },
-    { value: "국민", name: "국민은행" },
-    { value: "농협", name: "농협은행" },
-    { value: "신한", name: "신한은행" },
-    { value: "우리", name: "우리은행" },
-    { value: "카카오", name: "카카오뱅크" },
-  ];
 
   return (
     <section className={styles.transactionContainer}>
@@ -138,11 +121,16 @@ export default function TransActionComponent() {
           </div>
         </div>
       </div>
+
       <div className={styles.receiverWrapper}>
         <header className={styles.receiverSubtitle}>누구에게 보낼까요?</header>
         <div className={styles.receiverInfo}>
-          <select value={selected} onChange={handleSelect} required>
-            {selectList.map(item => (
+          <select
+            value={selected}
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelected(e.target.value)}
+            required
+          >
+            {SELECT_BANK.map(item => (
               <option key={item.value} value={item.value}>
                 {item.name}
               </option>
@@ -152,7 +140,7 @@ export default function TransActionComponent() {
             type="text"
             className={styles.receiverAccountInput}
             value={inputAccount}
-            onChange={handleChange}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setInputAccount(e.target.value)}
             placeholder="계좌번호를 입력하세요"
           />
           <button
@@ -181,19 +169,43 @@ export default function TransActionComponent() {
             <span className={styles.targetAccountBank}>
               {targetInfo.bank} {targetInfo.account}
             </span>
-            <span className={styles.targetAmount}>얼마를 보내시겠습니까?</span>
           </div>
-          <CurrencyInput value={money} setMoney={setMoney} />
-          <div>
+
+          <div className={styles.targetDatas}>
+            <div className={styles.targetMoney}>
+              <span className={styles.targetAmount}>얼마를 보내시겠습니까?</span>
+              <CurrencyInput value={money} setMoney={setMoney} />
+            </div>
+            <div className={styles.targetPurpose}>
+              <span className={styles.purposeTitle}>송금 목적을 선택해주세요</span>
+              <div className={styles.choosePurpose}>
+                {BUTTON_TYPES.map((btn, idx) => (
+                  <button
+                    key={`${idx}_${btn}`}
+                    className={styles.purposeBtn}
+                    onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                      console.log(e);
+                      const { innerText } = e.target as HTMLButtonElement;
+                      setPurpose(innerText);
+                    }}
+                  >
+                    {btn}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.chooseBtnWrapper}>
             {overBalanceMsg && <p className={styles.warningStatus}>{overBalanceMsg}</p>}
             <button
-              className={styles.commonBtn}
+              className={styles.chooseBtn}
               onClick={handleClickTransfer}
-              disabled={overBalanceMsg != "" || !money}
+              disabled={overBalanceMsg != "" || !money || !purpose}
             >
               송금하기
             </button>
-            <button className={styles.commonBtn} onClick={handleClickToMain}>
+            <button className={styles.chooseBtn} onClick={() => router.push("/main")}>
               송금 취소
             </button>
           </div>
