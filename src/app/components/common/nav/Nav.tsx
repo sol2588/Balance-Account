@@ -20,10 +20,10 @@ export default function Nav() {
           <Link href="/charge">Charge</Link>
         </li>
         <li className={styles.navItem}>
-          <Link href="/">Friends</Link>
+          <Link href="/friends">Friends</Link>
         </li>
         <li className={styles.navItem}>
-          <Link href="/">Report</Link>
+          <Link href="/report">Report</Link>
         </li>
       </ul>
     </nav>

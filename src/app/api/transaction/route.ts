@@ -40,7 +40,6 @@ export async function POST(req: NextRequest) {
         const accountsSnapshot = await getDocs(accountsQuery);
         const matchedData = accountsSnapshot.docs.map(doc => doc.data()).find(data => data.account == extractAccount);
 
-        console.log(purpose);
         if (matchedData) {
           let updateTargetInfo: TargetInfo = {
             targetUser: matchedData.owner,

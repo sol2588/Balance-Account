@@ -1,0 +1,66 @@
+.friendsContainer {
+  height: 100vh;
+  overflow: auto;
+  padding: 40px;
+}
+.friendsTitle {
+  font-size: 44px;
+}
+.recentHistory {
+  padding: 30px;
+  border-radius: 16px;
+  background-color: #3f4364;
+}
+.recentTitle {
+  margin-bottom: 10px;
+  color: #9fa2ae;
+  font-size: 20px;
+  font-weight: 500;
+}
+.recentTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  margin: 10px 0;
+}
+.recentTable th {
+  font-weight: 600;
+  border-bottom: 1px solid #ddd;
+  background-color: #626b96;
+  padding: 10px 5px;
+  text-align: left;
+}
+/* 
+#2B304D
+#3F4364 
+#626B96
+#F5F5F5
+#EFAA75  */
+
+.recentTableRow td {
+  padding: 10px 5px;
+  border-bottom: 1px solid #eee;
+}
+.submitBtn {
+  margin: 20px 10px 20px 0;
+  padding: 10px 12px;
+  font-size: 16px;
+  line-height: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #f9b179;
+  cursor: pointer;
+}
+
+.freindsList {
+  margin-top: 20px;
+  padding: 30px;
+  border-radius: 16px;
+  background-color: #3f4364;
+}
+.friendsListTitile {
+  margin-bottom: 10px;
+  color: #9fa2ae;
+  font-size: 20px;
+  font-weight: 500;
+}

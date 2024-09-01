@@ -122,6 +122,7 @@ export default function TransActionComponent() {
         </div>
       </div>
 
+      {/* 송금 받을 사람 계좌 입력 */}
       <div className={styles.receiverWrapper}>
         <header className={styles.receiverSubtitle}>누구에게 보낼까요?</header>
         <div className={styles.receiverInfo}>
@@ -162,6 +163,8 @@ export default function TransActionComponent() {
         </div>
         {message && <p>{message}</p>}
       </div>
+
+      {/* 보낼 금액 및 목적 */}
       {targetInfo.receiver && (
         <div className={styles.targetWrapper}>
           <div className={styles.targetAccountInfo}>
@@ -211,6 +214,8 @@ export default function TransActionComponent() {
           </div>
         </div>
       )}
+
+      {/* 송금 결과 확인 창 */}
       {transferRst && (
         <div className={styles.transferResultWrapper}>
           <p className={styles.transferResult}>
