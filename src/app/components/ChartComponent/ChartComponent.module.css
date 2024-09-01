@@ -1,0 +1,8 @@
+.chartContainer {
+  height: 100vh;
+  overflow: auto;
+  padding: 40px;
+}
+.title {
+  font-size: 44px;
+}

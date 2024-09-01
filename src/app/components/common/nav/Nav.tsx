@@ -23,7 +23,7 @@ export default function Nav() {
           <Link href="/friends">Friends</Link>
         </li>
         <li className={styles.navItem}>
-          <Link href="/report">Report</Link>
+          <Link href="/chart">Chart</Link>
         </li>
       </ul>
     </nav>
