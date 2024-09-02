@@ -47,7 +47,7 @@ export default function ChartComponent() {
       const dates = selectMonth ? new Date(selectYear, parseInt(selectMonth.slice(0, 1)), 0).getDate() : 0;
       const updatedDayExpenses: ExpenseProps = {};
       for (let day = 1; day <= dates; day++) {
-        updatedDayExpenses[`${day}월`] = 0;
+        updatedDayExpenses[`${day}일`] = 0;
       }
     } else {
       ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"].forEach(
