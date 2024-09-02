@@ -17,25 +17,13 @@ interface ExpenseProps {
   [key: string]: number;
 }
 
+// ! month는 string, year는 number => 일치
 export default function ChartComponent() {
   const [selectYear, setSelectyear] = useState<number>(new Date().getFullYear());
   const [selectMonth, setSelectMonth] = useState<string>();
   const [isDay, setIsDay] = useState<boolean>(false);
   const [fullData, setFullData] = useState<FullDataProps[]>();
-  const [monthlyExpenses, setMonthlyExpenses] = useState<ExpenseProps>({
-    "1월": 0,
-    "2월": 0,
-    "3월": 0,
-    "4월": 0,
-    "5월": 0,
-    "6월": 0,
-    "7월": 0,
-    "8월": 0,
-    "9월": 0,
-    "10월": 0,
-    "11월": 0,
-    "12월": 0,
-  });
+  const [expenses, setExpenses] = useState<ExpenseProps>({});
 
   // 전체 송금 내역 가져오기
   useEffect(() => {
@@ -53,74 +41,50 @@ export default function ChartComponent() {
     fetchData();
   }, []);
 
-  const expenseInMonth = (yearData: FullDataProps[]) => {
-    const updatedMonthlyExpenses: ExpenseProps = {
-      "1월": 0,
-      "2월": 0,
-      "3월": 0,
-      "4월": 0,
-      "5월": 0,
-      "6월": 0,
-      "7월": 0,
-      "8월": 0,
-      "9월": 0,
-      "10월": 0,
-      "11월": 0,
-      "12월": 0,
-    };
-
-    yearData.forEach(item => {
-      const timestamp = item.date.seconds * 1000;
-      const targetDate = new Date(timestamp);
-      const year = targetDate.getFullYear();
-      const month = (targetDate.getMonth() + 1).toString() + "월";
-
-      if (year == selectYear) {
-        updatedMonthlyExpenses[month] += parseInt(item.sendMoney.replaceAll(",", ""));
-      }
-    });
-    setMonthlyExpenses(updatedMonthlyExpenses);
-  };
-
-  const expenseInDay = (yearData: FullDataProps[]) => {
-    const dates = selectMonth && selectYear && new Date(selectYear, parseInt(selectMonth.slice(0, 1)), 0).getDate();
-    const updatedDayExpenses: { [key: string]: number } = {};
-    console.log(dates, typeof dates);
-    if (dates) {
+  const calculateExpenses = (yearData: FullDataProps[]) => {
+    const updateExpenses: ExpenseProps = {};
+    if (isDay) {
+      const dates = selectMonth ? new Date(selectYear, parseInt(selectMonth.slice(0, 1)), 0).getDate() : 0;
+      const updatedDayExpenses: ExpenseProps = {};
       for (let day = 1; day <= dates; day++) {
-        updatedDayExpenses[day] = 0;
+        updatedDayExpenses[`${day}월`] = 0;
       }
+    } else {
+      ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"].forEach(
+        month => (updateExpenses[month] = 0),
+      );
     }
 
     yearData.forEach(item => {
       const timestamp = item.date.seconds * 1000;
       const targetDate = new Date(timestamp);
       const year = targetDate.getFullYear();
-      const month = (targetDate.getMonth() + 1).toString() + "월";
-      const date = targetDate.getDate() + "일";
+      const month = `${targetDate.getMonth() + 1}월`;
+      const date = `${targetDate.getDate()}일`;
 
-      if (year == selectYear && selectMonth == month) {
-        updatedDayExpenses[date] = (updatedDayExpenses[date] || 0) + parseInt(item.sendMoney.replaceAll(",", ""));
+      if (year == selectYear) {
+        if (isDay && selectMonth == month)
+          updateExpenses[date] = (updateExpenses[date] || 0) + parseInt(item.sendMoney.replaceAll(",", ""));
+      } else if (!isDay) {
+        updateExpenses[month] += parseInt(item.sendMoney.replaceAll(",", ""));
       }
     });
-    setMonthlyExpenses(updatedDayExpenses);
+    setExpenses(updateExpenses);
   };
 
   useEffect(() => {
     if (!fullData?.length) return;
-    if (isDay) {
-      expenseInDay(fullData);
-    } else {
-      expenseInMonth(fullData);
+    else {
+      calculateExpenses(fullData);
     }
   }, [fullData, selectYear, selectMonth, isDay]);
 
   const chartData = {
-    labels: Object.keys(monthlyExpenses),
+    labels: Object.keys(expenses),
     datasets: [
       {
         label: "합계",
-        data: Object.values(monthlyExpenses),
+        data: Object.values(expenses),
         borderWidth: 2,
         borderColor: "#FD9DB2",
         backgroundColor: "rgba(255, 99, 132, 0.5)",
