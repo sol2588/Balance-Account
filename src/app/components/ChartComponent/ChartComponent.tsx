@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./ChartComponent.module.css";
 import { Timestamp } from "firebase/firestore";
-import { DateAdapter } from "chart.js";
 
 interface FullDataProps {
   account: string;
@@ -14,17 +13,26 @@ interface FullDataProps {
   name: string;
   sendMoney: string;
 }
-
-interface DataProps {
-  date: string;
-  name: string;
-  send: string;
-  idx: number;
+interface ExpenseProps {
+  [key: string]: number;
 }
 
 export default function ChartComponent() {
   const [fullData, setFullData] = useState<FullDataProps[]>();
-  const [sortedData, setSortedData] = useState({});
+  const [monthlyExpenses, setMonthlyExpenses] = useState<ExpenseProps>({
+    "1월": 0,
+    "2월": 0,
+    "3월": 0,
+    "4월": 0,
+    "5월": 0,
+    "6월": 0,
+    "7월": 0,
+    "8월": 0,
+    "9월": 0,
+    "10월": 0,
+    "11월": 0,
+    "12월": 0,
+  });
 
   // 전체 송금 내역 가져오기
   useEffect(() => {
@@ -32,7 +40,8 @@ export default function ChartComponent() {
       try {
         const response = await axios.get("/api/chart");
         if (response.status == 200) {
-          setFullData(response.data.allTransactionData);
+          const data = response.data.allTransactionData;
+          setFullData(data);
         }
       } catch (err) {
         console.log(err);
@@ -41,40 +50,44 @@ export default function ChartComponent() {
     fetchData();
   }, []);
 
-  // 송금내역 날짜 변환
+  const expenseInMonth = (yearData: FullDataProps[]) => {
+    const updatedMonthlyExpenses: ExpenseProps = {
+      "1월": 0,
+      "2월": 0,
+      "3월": 0,
+      "4월": 0,
+      "5월": 0,
+      "6월": 0,
+      "7월": 0,
+      "8월": 0,
+      "9월": 0,
+      "10월": 0,
+      "11월": 0,
+      "12월": 0,
+    };
+    console.log(yearData);
+    yearData.forEach(item => {
+      const timestamp = item.date.seconds * 1000;
+      const targetDate = new Date(timestamp);
+      const year = targetDate.getFullYear();
+      const month = (targetDate.getMonth() + 1).toString() + "월";
+
+      updatedMonthlyExpenses[month] += parseInt(item.sendMoney.replaceAll(",", "")) || 0;
+    });
+    setMonthlyExpenses(updatedMonthlyExpenses);
+  };
+
   useEffect(() => {
     if (!fullData?.length) return;
-    const groupData: { [year: number]: { [month: string]: DataProps[] } } = {};
-
-    fullData.forEach(({ idx, date, name, sendMoney }) => {
-      const targetDate = new Date(date.seconds * 1000);
-      const year = targetDate.getFullYear();
-      const month = ("0" + (targetDate.getMonth() + 1)).slice(-2);
-      const day = ("0" + targetDate.getDate()).slice(-2);
-      const dateString = year + "년" + month + "월" + day + "일";
-
-      const formatData = { idx, date: dateString, name, send: sendMoney };
-      if (!groupData[year]) {
-        groupData[year] = {};
-      }
-      if (!groupData[year][month]) {
-        groupData[year][month] = [];
-        groupData[year][month].push(formatData);
-      } else {
-        groupData[year][month].push(formatData);
-      }
-    });
-    setSortedData(groupData);
+    expenseInMonth(fullData);
   }, [fullData]);
 
-  console.log(sortedData);
-
   const chartData = {
-    labels: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+    labels: Object.keys(monthlyExpenses),
     datasets: [
       {
-        label: "TestData",
-        data: [0, 1, 2, 3, 10, 11, 4, 6, 1, 0, 12, 12],
+        label: "합계",
+        data: Object.values(monthlyExpenses),
         borderWidth: 2,
         borderColor: "#EFAA75",
         backgroundColor: "#fff",

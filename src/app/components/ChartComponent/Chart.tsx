@@ -12,8 +12,20 @@ import {
 import styles from "./Chart.module.css";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+interface Dataset {
+  label: string;
+  data: number[];
+  borderWidth: number;
+  borderColor: string;
+  backgroundColor: string;
+  tension: number;
+}
 
-const LineChart = ({ data }) => {
+interface LineChartProps {
+  labels: string[];
+  datasets: Dataset[];
+}
+const LineChart: React.FC<{ data: { labels: string[]; datasets: Dataset[] } }> = ({ data }) => {
   const options = {
     responsive: true,
     interaction: {
@@ -22,15 +34,16 @@ const LineChart = ({ data }) => {
     scales: {
       x: {
         grid: {
-          color: "blue",
-          display: false,
+          color: "#fff",
+          display: true,
         },
         ticks: {
           color: "#fff",
+          padding: 4,
         },
         title: {
           display: true,
-          text: "month",
+          text: "월",
           color: "#fff",
           size: 20,
         },
@@ -41,10 +54,12 @@ const LineChart = ({ data }) => {
         },
         ticks: {
           color: "#fff",
+          min: 0,
+          max: 200,
         },
         title: {
           display: true,
-          text: "count",
+          text: "금액",
           color: "#fff",
         },
       },
@@ -64,6 +79,9 @@ const LineChart = ({ data }) => {
         display: true,
         text: "지출 차트",
         color: "#fff",
+        font: {
+          size: 20,
+        },
       },
     },
   };
