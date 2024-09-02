@@ -1,17 +1,17 @@
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
 import styles from "./Chart.module.css";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, Title, Tooltip, Legend);
 interface Dataset {
   label: string;
   data: number[];
@@ -21,11 +21,11 @@ interface Dataset {
   tension: number;
 }
 
-interface LineChartProps {
+interface BarChartProps {
   labels: string[];
   datasets: Dataset[];
 }
-const LineChart: React.FC<{ data: { labels: string[]; datasets: Dataset[] } }> = ({ data }) => {
+const BarChart: React.FC<{ data: { labels: string[]; datasets: Dataset[] } }> = ({ data }) => {
   const options = {
     responsive: true,
     interaction: {
@@ -88,8 +88,8 @@ const LineChart: React.FC<{ data: { labels: string[]; datasets: Dataset[] } }> =
 
   return (
     <div className={styles.chartBox}>
-      <Line data={data} options={options} />
+      <Bar data={data} options={options} />
     </div>
   );
 };
-export default LineChart;
+export default BarChart;
