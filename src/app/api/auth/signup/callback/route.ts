@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { db } from "@/utils/database";
+import { getDocs, doc, query, setDoc, collection } from "firebase/firestore";
 import axios from "axios";
 
 export async function POST(req: NextRequest) {
@@ -32,6 +34,27 @@ export async function POST(req: NextRequest) {
       },
     });
     const userInfo = userInfoResponse.data;
+
+    const getUserInfo = await getDocs(collection(db, "users"));
+    if (userInfo) {
+      const findId = getUserInfo.docs.some(user => user.id == userInfo.id);
+      const findEmail = getUserInfo.docs.some(user => user.email == userInfo.email);
+
+      if (findId || findEmail) {
+        return NextResponse.json(
+          { message: "기존에 가입된 회원입니다. 로그인 페이지로 이동해주세요" },
+          { status: 400 },
+        );
+      }
+    }
+
+    // DB에 구글 소셜 로그인 정보 저장 || pw는?
+    await setDoc(doc(db, "users", `user_${userInfo.id}`), {
+      name: userInfo.name,
+      email: userInfo.email,
+      id: userInfo.id,
+      authProvider: "google",
+    });
 
     return NextResponse.json({ tokenData, userInfo }, { status: 200 });
   } catch (err: any) {

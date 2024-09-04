@@ -43,11 +43,12 @@ export async function POST(req: NextRequest) {
 
     // 4) db에 user정보 저장
     // const userNum = new Date().getTime().toString();
-    const addUser = await setDoc(doc(db, "users", `user_${userId}`), {
+    await setDoc(doc(db, "users", `user_${userId}`), {
       name: userName,
       email: userEmail,
       id: userId,
       pw: encryptedPW,
+      authoProvider: "system",
     });
 
     return NextResponse.json({ message: "success" });
