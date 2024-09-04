@@ -57,7 +57,7 @@ export default function LoginComponent() {
 
   const handleLogin = () => {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-    const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
+    const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_LOGIN_REDIRECT_URI;
 
     // authorization code 요청
     const googleAuthUrl =

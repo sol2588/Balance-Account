@@ -46,6 +46,21 @@ export default function SignupComponent() {
     }
   };
 
+  const handleGoogleSignup = () => {
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_SIGNUP_REDIRECT_URI;
+
+    const googleAuthUrl =
+      `https://accounts.google.com/o/oauth2/v2/auth?` +
+      `client_id=${clientId}&` +
+      `redirect_uri=${redirectUri}&` +
+      `response_type=code&` +
+      `scope=email profile&` +
+      `access_type=offline&` +
+      `prompt=consent`;
+    window.location.href = googleAuthUrl;
+  };
+
   return (
     <section className={styles.signupContainer}>
       <header>
@@ -103,6 +118,7 @@ export default function SignupComponent() {
           />
           <p>{pwValid}</p>
         </fieldset>
+        <button onClick={handleGoogleSignup}>회원가입 with Google</button>
         <button className={styles.submitBtn} type="submit">
           가입하기
         </button>
