@@ -15,12 +15,13 @@ interface ErrorType {
 
 export default function SignupComponent() {
   const router = useRouter();
-  const [userName, setUserName] = useState("");
-  const [userId, setUserId] = useState("");
-  const [pw, setPw] = useState("");
-  const [pwChk, setPwChk] = useState("");
-  const [message, setMessage] = useState("");
-  const [pwValid, setPwValid] = useState("");
+  const [userName, setUserName] = useState<string>("");
+  const [userId, setUserId] = useState<string>("");
+  const [pw, setPw] = useState<string>("");
+  const [pwChk, setPwChk] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+  const [pwValid, setPwValid] = useState<string>("");
+  const [userEmail, setUserEmail] = useState<string>("");
 
   // ! 이 부분 이상해 : logic - 현재는 pwChk입력후 pw를 바꾸면 둘이 일치해도 일치하지 않다고 나옴
   useEffect(() => {
@@ -34,7 +35,7 @@ export default function SignupComponent() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/signup", { userName, userId, pw, pwChk });
+      const response = await axios.post("/api/signup", { userName, userEmail, userId, pw, pwChk });
       if (response.status === 200) {
         router.push("/login");
       } else {
@@ -79,6 +80,18 @@ export default function SignupComponent() {
             name="name"
             value={userName}
             onChange={e => setUserName(e.target.value)}
+          />
+
+          <label htmlFor="email" className={styles.signupLabel}>
+            Email
+          </label>
+          <input
+            className={styles.signupInput}
+            type="text"
+            id="eamil"
+            name="email"
+            value={userEmail}
+            onChange={e => setUserEmail(e.target.value)}
           />
 
           <label htmlFor="id" className={styles.signupLabel}>
