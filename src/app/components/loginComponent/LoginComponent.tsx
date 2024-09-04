@@ -5,8 +5,8 @@ import { setLoginSuccess } from "@/lib/actions/userActions";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/lib/reducer";
 import styles from "./LoginComponent.module.css";
-import axios from "axios";
 import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 
 interface ErrorType {
   response?: {
@@ -45,25 +45,30 @@ export default function LoginComponent() {
     }
   };
 
-  const googleLogin = useGoogleLogin({
-    scope: "email profile",
-    onSuccess: async ({ code }) => {
-      axios.post("/api/auth/callback", { code }).then(data => console.log(data));
-    },
-    onError: err => console.log(err),
-    flow: "auth-code",
-  });
+  // const googleLogin = useGoogleLogin({
+  //   scope: "email profile",
+  //   onSuccess: async authCode => {
+  //     console.log("뭐냐너", authCode);
+  //     axios.post("/api/auth/callback", { code: authCode }).then(data => console.log(data));
+  //   },
+  //   onError: err => console.log(err),
+  //   flow: "auth-code",
+  // });
 
   const handleLogin = () => {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-    const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL;
+    const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
 
+    // authorization code 요청
     const googleAuthUrl =
       `https://accounts.google.com/o/oauth2/v2/auth?` +
       `client_id=${clientId}&` +
       `redirect_uri=${redirectUri}&` +
       `response_type=code&` +
-      `scope=email profile`;
+      `scope=email profile&` +
+      `access_type=offline&` + // access_type을 스코프가 아닌 URL 파라미터로 설정
+      `prompt=consent`; // 권한 승인을 항상 요청하는 옵션
+    console.log(googleAuthUrl);
     window.location.href = googleAuthUrl;
   };
 
@@ -105,6 +110,7 @@ export default function LoginComponent() {
         </button>
         {message.length && <p>{message}</p>}
       </form>
+
       <button onClick={handleLogin}>로그인 with Google</button>
 
       <p className={styles.contentsForGuest}>
