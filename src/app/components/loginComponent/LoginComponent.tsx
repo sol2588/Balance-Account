@@ -48,12 +48,16 @@ export default function LoginComponent() {
   const googleLogin = useGoogleLogin({
     scope: "email profile",
     onSuccess: async authCode => {
-      console.log(authCode);
       try {
         const response = await axios.post("/api/auth/login/callback", { authCode: authCode.code });
-        console.log(response.data);
-      } catch (err) {
-        console.log(err);
+        console.log(response);
+        if (response.status == 200) {
+          localStorage.setItem("accessToken", response.data.token);
+          localStorage.setItem("loginState", "true");
+          router.push("/main");
+        }
+      } catch (err: any) {
+        setMessage(err.response.data.message);
       }
     },
     onError: err => console.log(err),
@@ -61,22 +65,22 @@ export default function LoginComponent() {
     redirect_uri: "postmessage",
   });
 
-  const handleLogin = () => {
-    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-    const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_LOGIN_REDIRECT_URI;
+  // const handleLogin = () => {
+  //   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  //   const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_LOGIN_REDIRECT_URI;
 
-    // authorization code 요청
-    const googleAuthUrl =
-      `https://accounts.google.com/o/oauth2/v2/auth?` +
-      `client_id=${clientId}&` +
-      `redirect_uri=${redirectUri}&` +
-      `response_type=code&` +
-      `scope=email profile&` +
-      `access_type=offline&` + // access_type을 스코프가 아닌 URL 파라미터로 설정
-      `prompt=consent`; // 권한 승인을 항상 요청하는 옵션
-    console.log(googleAuthUrl);
-    window.location.href = googleAuthUrl;
-  };
+  //   // authorization code 요청
+  //   const googleAuthUrl =
+  //     `https://accounts.google.com/o/oauth2/v2/auth?` +
+  //     `client_id=${clientId}&` +
+  //     `redirect_uri=${redirectUri}&` +
+  //     `response_type=code&` +
+  //     `scope=email profile&` +
+  //     `access_type=offline&` + // access_type을 스코프가 아닌 URL 파라미터로 설정
+  //     `prompt=consent`; // 권한 승인을 항상 요청하는 옵션
+  //   console.log(googleAuthUrl);
+  //   window.location.href = googleAuthUrl;
+  // };
 
   return (
     <section className={styles.loginContainer}>

@@ -4,6 +4,7 @@ import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./SignupComponent.module.css";
 import axios from "axios";
+import { useGoogleLogin } from "@react-oauth/google";
 
 interface ErrorType {
   response?: {
@@ -47,20 +48,36 @@ export default function SignupComponent() {
     }
   };
 
-  const handleGoogleSignup = () => {
-    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-    const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_SIGNUP_REDIRECT_URI;
+  const googleSignup = useGoogleLogin({
+    scope: "email profile",
+    onSuccess: async authCode => {
+      console.log(authCode);
+      try {
+        const response = await axios.post("/api/auth/signup/callback", { authCode: authCode.code });
+        console.log(response.data);
+      } catch (err: any) {
+        setMessage(err.response.data.message);
+      }
+    },
+    onError: err => console.log(err),
+    flow: "auth-code",
+    redirect_uri: "postmessage",
+  });
 
-    const googleAuthUrl =
-      `https://accounts.google.com/o/oauth2/v2/auth?` +
-      `client_id=${clientId}&` +
-      `redirect_uri=${redirectUri}&` +
-      `response_type=code&` +
-      `scope=email profile&` +
-      `access_type=offline&` +
-      `prompt=consent`;
-    window.location.href = googleAuthUrl;
-  };
+  // const handleGoogleSignup = () => {
+  //   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  //   const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_SIGNUP_REDIRECT_URI;
+
+  //   const googleAuthUrl =
+  //     `https://accounts.google.com/o/oauth2/v2/auth?` +
+  //     `client_id=${clientId}&` +
+  //     `redirect_uri=${redirectUri}&` +
+  //     `response_type=code&` +
+  //     `scope=email profile&` +
+  //     `access_type=offline&` +
+  //     `prompt=consent`;
+  //   window.location.href = googleAuthUrl;
+  // };
 
   return (
     <section className={styles.signupContainer}>
@@ -131,7 +148,7 @@ export default function SignupComponent() {
           />
           <p>{pwValid}</p>
         </fieldset>
-        <button onClick={handleGoogleSignup}>회원가입 with Google</button>
+        <button onClick={googleSignup}>회원가입 with Google</button>
         <button className={styles.submitBtn} type="submit">
           가입하기
         </button>
