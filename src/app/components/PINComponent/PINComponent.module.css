@@ -1,0 +1,29 @@
+/* 
+#2B304D
+#3F4364 
+#626B96
+#F5F5F5
+#EFAA75 
+*/
+
+.pinContainer {
+  padding: 40px;
+}
+.pinTitle {
+  font-size: 44px;
+}
+.pinPassword {
+  margin: 10px;
+  width: 70px;
+  height: 70px;
+  font-size: 40px;
+  color: #fff;
+  outline: none;
+  text-align: center;
+  border: 1px solid #6f7599;
+  border-radius: 8px;
+  background-color: #3f4364;
+}
+.pinPassword.active {
+  border-color: #fff;
+}
