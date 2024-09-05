@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import styles from "./Nav.module.css";
+import LogoutButton from "../LogoutButton";
 
 export default function Nav() {
   return (
@@ -26,6 +27,7 @@ export default function Nav() {
           <Link href="/chart">Chart</Link>
         </li>
       </ul>
+      <LogoutButton />
     </nav>
   );
 }

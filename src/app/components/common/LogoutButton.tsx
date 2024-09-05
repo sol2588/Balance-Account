@@ -26,5 +26,9 @@ export default function LogoutButton() {
       console.log("Error during logout", err);
     }
   };
-  return <button onClick={handleLogout}>Logout</button>;
+  return (
+    <button style={{ width: "100px", height: "20px", display: "inline-block" }} onClick={handleLogout}>
+      Logout
+    </button>
+  );
 }

@@ -45,15 +45,21 @@ export default function LoginComponent() {
     }
   };
 
-  // const googleLogin = useGoogleLogin({
-  //   scope: "email profile",
-  //   onSuccess: async authCode => {
-  //     console.log("뭐냐너", authCode);
-  //     axios.post("/api/auth/callback", { code: authCode }).then(data => console.log(data));
-  //   },
-  //   onError: err => console.log(err),
-  //   flow: "auth-code",
-  // });
+  const googleLogin = useGoogleLogin({
+    scope: "email profile",
+    onSuccess: async authCode => {
+      console.log(authCode);
+      try {
+        const response = await axios.post("/api/auth/login/callback", { authCode: authCode.code });
+        console.log(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    onError: err => console.log(err),
+    flow: "auth-code",
+    redirect_uri: "postmessage",
+  });
 
   const handleLogin = () => {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
@@ -111,7 +117,7 @@ export default function LoginComponent() {
         {message.length && <p>{message}</p>}
       </form>
 
-      <button onClick={handleLogin}>로그인 with Google</button>
+      <button onClick={googleLogin}>로그인 with Google</button>
 
       <p className={styles.contentsForGuest}>
         New User?{" "}
