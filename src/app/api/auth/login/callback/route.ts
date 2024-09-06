@@ -44,13 +44,17 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     } else {
-      const idData = getUserInfo.docs.some(user => user.data().email == userInfo.email);
+      const matchedUser = getUserInfo.docs.find(user => user.data().email === userInfo.email);
       // 2) 존재하는 사용자인 경우 : JWT토큰 발행
-      if (idData) {
+      if (matchedUser) {
         const accessToken = generateAccess(userInfo.userId);
         const refreshToken = generateRefresh(userInfo.userId);
+
+        console.log(matchedUser.data());
+        const pinNum = matchedUser.data().pinNum || "";
+
         return NextResponse.json(
-          { accessToken },
+          { accessToken, pinNum },
           {
             headers: {
               "Set-cookie": `refreshToken=${refreshToken}; HttpOnly; Secure; Path=/; Max-Age=1209600; SameSite=Strict`,

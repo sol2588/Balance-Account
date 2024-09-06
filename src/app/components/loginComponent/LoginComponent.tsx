@@ -35,7 +35,12 @@ export default function LoginComponent() {
         // session Storage - cookie 탭에 담겨있고 클라이언트에서 request보낼때 자동으로 http의 모든 내용을 포함함
         localStorage.setItem("accessToken", response.data.token);
         localStorage.setItem("loginState", "true");
-        router.push("/main");
+        if (response.data.pinNum) {
+          console.log(response.data.pinNum);
+          router.push("/main");
+        } else {
+          router.push("/login/success");
+        }
       } else {
         console.log(response.status);
       }
@@ -50,11 +55,14 @@ export default function LoginComponent() {
     onSuccess: async authCode => {
       try {
         const response = await axios.post("/api/auth/login/callback", { authCode: authCode.code });
-        console.log(response);
         if (response.status == 200) {
           localStorage.setItem("accessToken", response.data.token);
           localStorage.setItem("loginState", "true");
-          router.push("/main");
+          if (response.data.pinNum) {
+            router.push("/main");
+          } else {
+            router.push("/login/success");
+          }
         }
       } catch (err: any) {
         setMessage(err.response.data.message);
@@ -64,23 +72,6 @@ export default function LoginComponent() {
     flow: "auth-code",
     redirect_uri: "postmessage",
   });
-
-  // const handleLogin = () => {
-  //   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-  //   const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_LOGIN_REDIRECT_URI;
-
-  //   // authorization code 요청
-  //   const googleAuthUrl =
-  //     `https://accounts.google.com/o/oauth2/v2/auth?` +
-  //     `client_id=${clientId}&` +
-  //     `redirect_uri=${redirectUri}&` +
-  //     `response_type=code&` +
-  //     `scope=email profile&` +
-  //     `access_type=offline&` + // access_type을 스코프가 아닌 URL 파라미터로 설정
-  //     `prompt=consent`; // 권한 승인을 항상 요청하는 옵션
-  //   console.log(googleAuthUrl);
-  //   window.location.href = googleAuthUrl;
-  // };
 
   return (
     <section className={styles.loginContainer}>
@@ -122,6 +113,7 @@ export default function LoginComponent() {
       </form>
 
       <button onClick={googleLogin}>로그인 with Google</button>
+      <button onClick={() => router.push("/pin/login")}>간편로그인 하기</button>
 
       <p className={styles.contentsForGuest}>
         New User?{" "}

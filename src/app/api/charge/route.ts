@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     const getUserData = cookieStore.get("refreshToken")?.value;
 
     if (!getUserData) {
-      return NextResponse.json({ message: "Unauthozired, no toekn" }, { status: 400 });
+      return NextResponse.json({ message: "Unauthozired, no token" }, { status: 400 });
     }
     const decoded = jwt.verify(getUserData, process.env.PRIVATE_KEY as string);
     const { userId } = decoded as JwtPayload;

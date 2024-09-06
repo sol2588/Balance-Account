@@ -1,0 +1,38 @@
+.pinMakeContainer {
+  padding: 40px;
+  text-align: start;
+}
+.pinMakeHeader {
+  font-size: 44px;
+  text-align: start;
+  margin-bottom: 0;
+}
+.pinMakeContents {
+  margin: 20px 0;
+}
+.pinMakeDesc {
+  font-size: 20px;
+}
+.pinForm {
+  display: flex;
+  flex-direction: column;
+}
+.pinInput {
+  font-size: 16px;
+  width: 400px;
+  height: 50px;
+  margin: 20px 0;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  background-color: rgb(233, 233, 233);
+}
+.submitBtn {
+  margin: 50px 0;
+  width: 400px;
+  height: 50px;
+  border: none;
+  background-color: #f9b179;
+  border-radius: 8px;
+  cursor: pointer;
+}

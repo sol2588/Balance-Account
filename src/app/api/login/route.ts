@@ -33,10 +33,13 @@ export async function POST(req: NextRequest) {
       const token = generateAccess(userId);
       const refreshToken = generateRefresh(userId);
 
+      // 5) pinNumber가 있는 경우 데이터 보내주기
+      const pinNum = checkUser.data().pinPw || "";
+
       // 첫번째 인자로 json data, 두번째 인자로 옵션객체
       // 리프레시 토큰을 headers에 담고 access를 return
       return NextResponse.json(
-        { token },
+        { token, pinNum },
         {
           headers: {
             "Set-Cookie": `refreshToken=${refreshToken}; HttpOnly; Secure; Path=/; Max-Age=1209600; SameSite=Strict`,

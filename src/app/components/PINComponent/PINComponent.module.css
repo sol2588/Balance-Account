@@ -1,21 +1,22 @@
-/* 
-#2B304D
-#3F4364 
-#626B96
-#F5F5F5
-#EFAA75 
-*/
-
 .pinContainer {
   padding: 40px;
 }
 .pinTitle {
   font-size: 44px;
 }
-.pinPassword {
+.pinContents {
+  width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.pinList {
+  display: flex;
+}
+.pinItem {
   margin: 10px;
-  width: 70px;
-  height: 70px;
+  width: 50px;
+  height: 50px;
   font-size: 40px;
   color: #fff;
   outline: none;
@@ -24,6 +25,54 @@
   border-radius: 8px;
   background-color: #3f4364;
 }
-.pinPassword.active {
+.pinItem.active {
   border-color: #fff;
+}
+.pinKeypad {
+  margin: 40px 10px;
+  width: 350px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas:
+    "one two three"
+    "four five six"
+    "seven eight nine"
+    ". zero btn";
+  justify-items: center;
+  gap: 30px;
+}
+.pinKey {
+  width: 50px;
+  height: 50px;
+  background-color: #efaa75;
+  border: 1px solid #6f7599;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.pinKey[data-value="0"] {
+  grid-area: zero;
+}
+
+.deleteBtn {
+  display: inline;
+  color: #f5f5f5;
+  border: none;
+  background-color: inherit;
+  grid-area: btn;
+  cursor: pointer;
+}
+.confirmBtn {
+  margin: 100px 10px;
+  font-size: 20px;
+  width: 410px;
+  height: 40px;
+  display: block;
+  border: none;
+  border-radius: 8px;
+  background-color: #f9b179;
+  cursor: pointer;
+}
+
+.visibility {
+  display: block;
 }
