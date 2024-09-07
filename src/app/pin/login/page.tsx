@@ -1,5 +1,5 @@
-import PINComponent from "@/app/components/PINComponent/PINComponent";
+import PINLoginComponent from "@/app/components/PINLoginComponent/PINLoginComponent";
 
 export default function PIN() {
-  return <PINComponent />;
+  return <PINLoginComponent />;
 }

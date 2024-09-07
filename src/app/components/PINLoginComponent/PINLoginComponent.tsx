@@ -1,11 +1,12 @@
 "use client";
 import { useState, useEffect, ChangeEvent, MouseEvent } from "react";
-import styles from "./PINComponent.module.css";
+import styles from "./PINLoginComponent.module.css";
 import clsx from "clsx";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
 export default function PINComponent() {
+  const [userId, setUserId] = useState<string>("");
   const [pinPw, setPinPw] = useState<string>("");
   const router = useRouter();
   const [message, setMessage] = useState<string>("");
@@ -28,15 +29,21 @@ export default function PINComponent() {
   };
 
   const submitButton = async () => {
-    const response = await axios.post("/api/pin/login", { pinPw });
+    const response = await axios.post("/api/pin/login", { userId, pinPw });
     if (response.status == 200) {
       try {
-        console.log(response.data.message);
-        // router.push("/main");
+        setMessage(response.data.message);
+        localStorage.setItem("accessToken", response.data.token);
+        localStorage.setItem("loginState", "true");
+        router.push("/main");
       } catch (err) {
         console.log(err);
       }
     }
+  };
+
+  const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setUserId(e.target.value);
   };
 
   return (
@@ -45,6 +52,9 @@ export default function PINComponent() {
         <h4 className={styles.pinTitle}>간편 로그인</h4>
       </header>
       <div className={styles.pinContents}>
+        <div className={styles.pinInput}>
+          <input type="text" value={userId} onChange={handleInput} />
+        </div>
         <div className={styles.pinList}>
           {buttonArr.map(item => (
             <div key={item} className={clsx(styles.pinItem, needFocus == item || needFocus == 7 ? styles.active : "")}>
@@ -62,9 +72,10 @@ export default function PINComponent() {
             지우기
           </button>
         </div>
-        <button onClick={submitButton} className={styles.confirmBtn} disabled={pinPw?.length != 6}>
+        <button onClick={submitButton} className={styles.confirmBtn} disabled={pinPw?.length != 6 || !userId}>
           확인
         </button>
+        {message && <div>{message}</div>}
       </div>
     </section>
   );
