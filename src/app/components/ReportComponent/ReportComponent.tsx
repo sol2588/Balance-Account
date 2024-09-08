@@ -62,27 +62,40 @@ export default function ReportComponent() {
     setOriginData(JSON.parse(localValue));
   }, []);
 
-  const handleClickMonth = (e: MouseEvent<HTMLButtonElement>) => {
-    const { value } = e.target as HTMLButtonElement;
-    const changeValue = parseInt(value.slice(-1));
+  const getTargetDate = (value: string) => {
+    const selectDate = new Date();
+    if (value.includes("year")) {
+      selectDate.setFullYear(selectDate.getFullYear() - 1);
+    } else {
+      const selectMonth = parseInt(value.replace("month", ""));
+      selectDate.setMonth(selectDate.getMonth() - selectMonth);
+    }
+    return selectDate.toISOString().split("T")[0];
+  };
 
-    const filteredData = originData.filter(recent => {
+  const filteredByDate = (targetDate: string): RecentProps[] => {
+    return originData.filter(recent => {
       const compareDate = new Date(recent.date).toISOString().split("T")[0];
-      const newDate = new Date();
-
-      if (value.includes("year")) {
-        newDate.setFullYear(newDate.getFullYear() - 1);
-      } else {
-        newDate.setMonth(newDate.getMonth() - changeValue);
-      }
-      const targetDate = newDate.toISOString().split("T")[0];
-      setStartDate(targetDate);
-      setEndDate(new Date().toISOString().split("T")[0]);
       return new Date(compareDate) >= new Date(targetDate);
     });
-
-    setRecentData(filteredData);
   };
+
+  const handleClickMonth = (e: MouseEvent<HTMLButtonElement>) => {
+    const { value } = e.target as HTMLButtonElement;
+
+    const targetDate = getTargetDate(value);
+    const filterdData = filteredByDate(targetDate);
+    setStartDate(targetDate);
+    setEndDate(new Date().toISOString().split("T")[0]);
+    setRecentData(filterdData);
+  };
+
+  const periodOptions = [
+    { label: "1개월", value: "month1" },
+    { label: "3개월", value: "month3" },
+    { label: "6개월", value: "month6" },
+    { label: "1년", value: "year1" },
+  ];
 
   return (
     <section className={styles.reportContainer}>
@@ -111,18 +124,11 @@ export default function ReportComponent() {
             </div>
 
             <div className={styles.dateButton}>
-              <button value="month1" onClick={handleClickMonth}>
-                1개월
-              </button>
-              <button value="month3" onClick={handleClickMonth}>
-                3개월
-              </button>
-              <button value="month6" onClick={handleClickMonth}>
-                6개월
-              </button>
-              <button value="year1" onClick={handleClickMonth}>
-                1년
-              </button>
+              {periodOptions.map(option => (
+                <button key={option.value} value={option.value} onClick={handleClickMonth}>
+                  {option.label}
+                </button>
+              ))}
             </div>
           </div>
         )}
