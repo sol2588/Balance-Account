@@ -2,6 +2,7 @@
 
 import { useState, useEffect, MouseEvent } from "react";
 import { Timestamp } from "firebase/firestore";
+import Pagination from "../PaginationComponent/PagiantionComponent";
 import axios from "axios";
 import styles from "./ReportComponent.module.css";
 interface RecentProps {
@@ -66,9 +67,13 @@ export default function ReportComponent() {
     const selectDate = new Date();
     if (value.includes("year")) {
       selectDate.setFullYear(selectDate.getFullYear() - 1);
-    } else {
+    } else if (value.includes("month")) {
       const selectMonth = parseInt(value.replace("month", ""));
       selectDate.setMonth(selectDate.getMonth() - selectMonth);
+    } else {
+      selectDate.setFullYear(2023);
+      selectDate.setMonth(0);
+      selectDate.setDate(1);
     }
     return selectDate.toISOString().split("T")[0];
   };
@@ -91,6 +96,7 @@ export default function ReportComponent() {
   };
 
   const periodOptions = [
+    { label: "전체", value: "full" },
     { label: "1개월", value: "month1" },
     { label: "3개월", value: "month3" },
     { label: "6개월", value: "month6" },
@@ -135,29 +141,18 @@ export default function ReportComponent() {
       </div>
       <div>기간</div>
       <div className={styles.reportContents}>
-        <table className={styles.recentTable}>
-          <thead>
-            <tr className={styles.recentTableRow}>
-              <th>순번</th>
-              <th>날짜</th>
-              <th>이름</th>
-              <th>은행</th>
-              <th>금액</th>
-            </tr>
-          </thead>
-          <tbody>
-            {recentData.map((item, idx) => (
-              <tr key={item.idx} className={styles.recentTableRow}>
-                <td>{idx + 1}</td>
-                <td>{item.date}</td>
-                <td>{item.name}</td>
-                <td>{item.bank}</td>
-                <td>{item.sendMoney}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className={styles.reportResult}></div>
+        <Pagination recentData={recentData} />
+
+        <div className={styles.reportResult}>
+          <div className={styles.reportTitle}>
+            {startDate}부터 {endDate} 지출 총금액
+          </div>
+          <div className={styles.reportValue}>
+            {recentData.reduce((acc, cur) => {
+              return (acc += parseInt(cur.sendMoney.replace(",", "")));
+            }, 0)}
+          </div>
+        </div>
       </div>
     </section>
   );
