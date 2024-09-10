@@ -33,8 +33,8 @@ export default function PINComponent() {
     if (response.status == 200) {
       try {
         setMessage(response.data.message);
-        localStorage.setItem("accessToken", response.data.token);
-        localStorage.setItem("loginState", "true");
+        sessionStorage.setItem("accessToken", response.data.token);
+        sessionStorage.setItem("loginState", "true");
         router.push("/main");
       } catch (err) {
         console.log(err);

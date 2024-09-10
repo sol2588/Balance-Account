@@ -30,14 +30,33 @@
   background-color: transparent;
   border: 1px solid #9fa2ae;
   border-radius: 8px;
-  outline: none;
   color: #f9b179;
+}
+.singupInputPwMsg {
+  color: rgb(222, 73, 73);
 }
 .submitBtn {
   width: 300px;
-  height: 50px;
+  height: 60px;
   margin: 32px 0;
+  font-size: 16px;
   background-color: #f9b179;
   border: 0;
   border-radius: 8px;
+  cursor: pointer;
+}
+.submitBtn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+.googleBtn {
+  display: flex;
+  align-items: center;
+  background-color: inherit;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.googleBtn > img {
+  width: 300px;
 }

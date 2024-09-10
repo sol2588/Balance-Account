@@ -50,7 +50,7 @@ export default function TransActionComponent() {
 
   // ! dispatch로 accountInfo 갱신 필요
   useEffect(() => {
-    const storageItem = localStorage.getItem("accountInfo");
+    const storageItem = sessionStorage.getItem("accountInfo");
     if (storageItem) {
       setAccountInfo(JSON.parse(storageItem));
     }
@@ -95,7 +95,7 @@ export default function TransActionComponent() {
       const response = await axios.post("/api/transaction", { action: "transfer", targetInfo, money, purpose });
       if (response.status == 200) {
         const { account, balance } = response.data.responseData;
-        localStorage.setItem("accountInfo", JSON.stringify({ account: account, balance: balance }));
+        sessionStorage.setItem("accountInfo", JSON.stringify({ account: account, balance: balance }));
         setAccountInfo({ account: account, balance: balance });
         setTransferRst(true);
       }

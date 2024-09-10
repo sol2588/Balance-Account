@@ -14,10 +14,10 @@ export default function LogoutButton() {
       if (response.status == 200) {
         // 전역상태 : 로그아웃(isLoggedIn : false)
         dispatch(setLogoutSuccess());
-        localStorage.removeItem("accessToken");
+        sessionStorage.removeItem("accessToken");
         // ! accountInfo 삭제
-        localStorage.removeItem("accountInfo");
-        localStorage.setItem("loginState", "false");
+        sessionStorage.removeItem("accountInfo");
+        sessionStorage.setItem("loginState", "false");
         router.push("/");
       } else {
         console.log(new Error());

@@ -31,10 +31,10 @@ export default function LoginComponent() {
       if (response.status == 200) {
         dispatch(setLoginSuccess({ id: userId, token: response.data.token }));
 
-        // access token은 localstorage에 저장하고 refresh는 HttpOnly로 클라이언트 JS로는 접근하여 확인 불가
+        // access token은 sessionStorage 저장하고 refresh는 HttpOnly로 클라이언트 JS로는 접근하여 확인 불가
         // session Storage - cookie 탭에 담겨있고 클라이언트에서 request보낼때 자동으로 http의 모든 내용을 포함함
-        localStorage.setItem("accessToken", response.data.token);
-        localStorage.setItem("loginState", "true");
+        sessionStorage.setItem("accessToken", response.data.token);
+        sessionStorage.setItem("loginState", "true");
         if (response.data.pinNum) {
           console.log(response.data.pinNum);
           router.push("/main");
@@ -56,8 +56,8 @@ export default function LoginComponent() {
       try {
         const response = await axios.post("/api/auth/login/callback", { authCode: authCode.code });
         if (response.status == 200) {
-          localStorage.setItem("accessToken", response.data.token);
-          localStorage.setItem("loginState", "true");
+          sessionStorage.setItem("accessToken", response.data.token);
+          sessionStorage.setItem("loginState", "true");
           if (response.data.pinNum) {
             router.push("/main");
           } else {
@@ -112,7 +112,9 @@ export default function LoginComponent() {
         {message.length && <p>{message}</p>}
       </form>
 
-      <button onClick={googleLogin}>로그인 with Google</button>
+      <button className={styles.googleBtn} onClick={googleLogin}>
+        <img src="/web_light_sq_SU@2x.png" alt="Sign in with Google" />
+      </button>
       <button onClick={() => router.push("/pin/login")}>간편로그인 하기</button>
 
       <p className={styles.contentsForGuest}>

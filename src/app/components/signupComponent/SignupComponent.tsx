@@ -2,9 +2,9 @@
 
 import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useGoogleLogin } from "@react-oauth/google";
 import styles from "./SignupComponent.module.css";
 import axios from "axios";
-import { useGoogleLogin } from "@react-oauth/google";
 
 interface ErrorType {
   response?: {
@@ -24,14 +24,17 @@ export default function SignupComponent() {
   const [pwValid, setPwValid] = useState<string>("");
   const [userEmail, setUserEmail] = useState<string>("");
 
-  // ! 이 부분 이상해 : logic - 현재는 pwChk입력후 pw를 바꾸면 둘이 일치해도 일치하지 않다고 나옴
   useEffect(() => {
-    if (pw != pwChk) {
+    if (!pw || !pwChk) {
+      setPwValid("");
+    } else if (pw != pwChk) {
       setPwValid("비밀번호가 일치하지 않습니다.");
-    } else if (pw == pwChk) {
+    } else {
       setPwValid("비밀번호가 일치합니다.");
     }
-  }, [pwChk]);
+  }, [pw, pwChk]);
+
+  const isDisabled = !userName || !userId || !userEmail || !pw || !pwChk;
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -51,10 +54,11 @@ export default function SignupComponent() {
   const googleSignup = useGoogleLogin({
     scope: "email profile",
     onSuccess: async authCode => {
-      console.log(authCode);
       try {
         const response = await axios.post("/api/auth/signup/callback", { authCode: authCode.code });
-        console.log(response.data);
+        if (response.status === 200) {
+          router.push("/login");
+        }
       } catch (err: any) {
         setMessage(err.response.data.message);
       }
@@ -63,21 +67,6 @@ export default function SignupComponent() {
     flow: "auth-code",
     redirect_uri: "postmessage",
   });
-
-  // const handleGoogleSignup = () => {
-  //   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-  //   const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_SIGNUP_REDIRECT_URI;
-
-  //   const googleAuthUrl =
-  //     `https://accounts.google.com/o/oauth2/v2/auth?` +
-  //     `client_id=${clientId}&` +
-  //     `redirect_uri=${redirectUri}&` +
-  //     `response_type=code&` +
-  //     `scope=email profile&` +
-  //     `access_type=offline&` +
-  //     `prompt=consent`;
-  //   window.location.href = googleAuthUrl;
-  // };
 
   return (
     <section className={styles.signupContainer}>
@@ -97,6 +86,7 @@ export default function SignupComponent() {
             name="name"
             value={userName}
             onChange={e => setUserName(e.target.value)}
+            tabIndex={1}
           />
 
           <label htmlFor="email" className={styles.signupLabel}>
@@ -109,6 +99,7 @@ export default function SignupComponent() {
             name="email"
             value={userEmail}
             onChange={e => setUserEmail(e.target.value)}
+            tabIndex={2}
           />
 
           <label htmlFor="id" className={styles.signupLabel}>
@@ -121,6 +112,7 @@ export default function SignupComponent() {
             name="id"
             value={userId}
             onChange={e => setUserId(e.target.value)}
+            tabIndex={3}
           />
 
           <label htmlFor="pw" className={styles.signupLabel}>
@@ -133,6 +125,7 @@ export default function SignupComponent() {
             name="pw"
             value={pw}
             onChange={e => setPw(e.target.value)}
+            tabIndex={4}
           />
 
           <label htmlFor="pwChk" className={styles.signupLabel}>
@@ -145,14 +138,19 @@ export default function SignupComponent() {
             name="pwChk"
             value={pwChk}
             onChange={e => setPwChk(e.target.value)}
+            tabIndex={5}
           />
-          <p>{pwValid}</p>
+          <span className={styles.singupInputPwMsg}>{pwValid}</span>
         </fieldset>
-        <button onClick={googleSignup}>회원가입 with Google</button>
-        <button className={styles.submitBtn} type="submit">
+
+        {message && <p>{message}</p>}
+        <button className={styles.submitBtn} type="submit" disabled={isDisabled}>
           가입하기
         </button>
-        {message.length && <p>{message}</p>}
+
+        <button className={styles.googleBtn} onClick={googleSignup}>
+          <img src="/web_light_sq_SU@2x.png" alt="google_login" />
+        </button>
       </form>
     </section>
   );

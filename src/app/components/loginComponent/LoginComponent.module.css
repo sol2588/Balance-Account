@@ -50,3 +50,14 @@
   background-color: transparent;
   cursor: pointer;
 }
+.googleBtn {
+  display: flex;
+  align-items: center;
+  background-color: inherit;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.googleBtn > img {
+  width: 300px;
+}

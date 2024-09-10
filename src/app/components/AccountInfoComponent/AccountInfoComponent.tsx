@@ -10,7 +10,7 @@ export default function AccountInfoComponent() {
   const router = useRouter();
 
   useEffect(() => {
-    const accountInfo = localStorage.getItem("accountInfo");
+    const accountInfo = sessionStorage.getItem("accountInfo");
     setAccount(accountInfo ? JSON.parse(accountInfo).account : "");
     setBalance(accountInfo ? JSON.parse(accountInfo).balance : "");
   }, []);

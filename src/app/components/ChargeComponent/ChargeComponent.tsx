@@ -32,9 +32,9 @@ export default function ChargeComponent() {
       if (response.status == 200) {
         const { updateBalance } = response.data;
         setBalance(updateBalance);
-        let storageItems = JSON.parse(localStorage.getItem("accountInfo") || "{}");
+        let storageItems = JSON.parse(sessionStorage.getItem("accountInfo") || "{}");
         storageItems = { ...storageItems, balance: updateBalance.toLocaleString("ko-KR") };
-        localStorage.setItem("accountInfo", JSON.stringify(storageItems));
+        sessionStorage.setItem("accountInfo", JSON.stringify(storageItems));
         setChargeAmount("");
       } else {
         console.log("충전이 실패했슴니다.");

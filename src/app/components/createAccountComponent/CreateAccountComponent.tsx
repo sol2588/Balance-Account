@@ -25,7 +25,7 @@ export default function CreateAccountComponent() {
         };
 
         dispatch(makeAccountSuccess(accountData));
-        localStorage.setItem("accountInfo", JSON.stringify(accountData));
+        sessionStorage.setItem("accountInfo", JSON.stringify(accountData));
         router.push("/main");
       }
     } catch (err: unknown) {
@@ -39,7 +39,7 @@ export default function CreateAccountComponent() {
             };
 
             dispatch(makeAccountSuccess(dispatchData));
-            localStorage.setItem("accountInfo", JSON.stringify(dispatchData));
+            sessionStorage.setItem("accountInfo", JSON.stringify(dispatchData));
             setErrMessage("계좌가 이미 존재합니다. 메인페이지로 이동해주세요");
           } else {
             setErrMessage(err.response.data.message);
