@@ -1,11 +1,10 @@
 "use client";
 import { FormEvent, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { setLoginSuccess } from "@/lib/actions/userActions";
-import { useRouter } from "next/navigation";
-import { RootState } from "@/lib/reducer";
-import styles from "./LoginComponent.module.css";
+import { useDispatch } from "react-redux";
 import { useGoogleLogin } from "@react-oauth/google";
+import { useRouter } from "next/navigation";
+import { setLoginSuccess } from "@/lib/actions/userActions";
+import styles from "./LoginComponent.module.css";
 import axios from "axios";
 
 interface ErrorType {
@@ -17,7 +16,6 @@ interface ErrorType {
 }
 
 export default function LoginComponent() {
-  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const dispatch = useDispatch();
   const router = useRouter();
   const [message, setMessage] = useState("");
@@ -29,14 +27,10 @@ export default function LoginComponent() {
     try {
       const response = await axios.post("/api/login", { userId, pw });
       if (response.status == 200) {
-        dispatch(setLoginSuccess({ id: userId, token: response.data.token }));
-
+        dispatch(setLoginSuccess({ id: userId, token: response.data.token, name: response.data.name }));
         // access token은 sessionStorage 저장하고 refresh는 HttpOnly로 클라이언트 JS로는 접근하여 확인 불가
         // session Storage - cookie 탭에 담겨있고 클라이언트에서 request보낼때 자동으로 http의 모든 내용을 포함함
-        sessionStorage.setItem("accessToken", response.data.token);
-        sessionStorage.setItem("loginState", "true");
-        if (response.data.pinNum) {
-          console.log(response.data.pinNum);
+        if (response.data.pinExist) {
           router.push("/main");
         } else {
           router.push("/login/success");
@@ -56,9 +50,8 @@ export default function LoginComponent() {
       try {
         const response = await axios.post("/api/auth/login/callback", { authCode: authCode.code });
         if (response.status == 200) {
-          sessionStorage.setItem("accessToken", response.data.token);
-          sessionStorage.setItem("loginState", "true");
-          if (response.data.pinNum) {
+          if (response.data.pinExist) {
+            dispatch(setLoginSuccess({ id: userId, token: response.data.token, name: response.data.name }));
             router.push("/main");
           } else {
             router.push("/login/success");
@@ -106,16 +99,18 @@ export default function LoginComponent() {
             onChange={e => setPw(e.target.value)}
           />
         </fieldset>
-        <button className={styles.submitBtn} type="submit">
+        <button className={styles.submitBtn} type="submit" disabled={!userId || !pw}>
           Login
         </button>
-        {message.length && <p>{message}</p>}
+        {message && <span>{message}</span>}
       </form>
+      <button className={styles.pinLoginBtn} onClick={() => router.push("/pin/login")}>
+        간편로그인 하기
+      </button>
 
       <button className={styles.googleBtn} onClick={googleLogin}>
         <img src="/web_light_sq_SU@2x.png" alt="Sign in with Google" />
       </button>
-      <button onClick={() => router.push("/pin/login")}>간편로그인 하기</button>
 
       <p className={styles.contentsForGuest}>
         New User?{" "}

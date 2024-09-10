@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, setDoc, query, where } from "firebase/firestore";
 import { cookies } from "next/headers";
 import { db } from "@/utils/database";
 import bcrypt from "bcrypt";
@@ -22,18 +22,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "필요한 정보를 모두 입력해주세요" }, { status: 400 });
     }
 
-    // 유효성2) id가 이미 존재할때
-    const getUserInfo = await getDocs(collection(db, "users"));
-    const userIdExist = (id: string) => {
-      return getUserInfo.docs.some(user => user.data().id == id);
-    };
-    if (userIdExist(userId)) {
+    // 유효성2) id, email이 이미 존재할때
+    const userDocRef = doc(db, "users", `user_${userId}`);
+    const userDoc = await getDoc(userDocRef);
+    // userId가 존재하는 경우
+    if (userDoc.exists()) {
       return NextResponse.json({ message: "이미 존재하는 아이디 입니다." }, { status: 405 });
     }
-    const userEmailExist = (email: string) => {
-      return getUserInfo.docs.some(user => user.data().email == email);
-    };
-    if (userEmailExist(userEmail)) {
+    const userEmailQuery = query(collection(db, "users"), where("email", "==", userEmail));
+    const userEmailSnapshot = await getDocs(userEmailQuery);
+    // userEmail이 존재하는 경우
+    if (!userEmailSnapshot.empty) {
       return NextResponse.json({ message: "이미 존재하는 이메일 입니다." }, { status: 405 });
     }
 

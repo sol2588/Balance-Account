@@ -31,14 +31,11 @@ export async function POST(req: NextRequest) {
     });
 
     const userInfo = userInfoResponse.data;
-    console.log("&&userInfo:        ", userInfo);
-
     const userQuery = query(collection(db, "users"), where("authProvider", "==", "google"));
-
     const getUserInfo = await getDocs(userQuery);
     // 1) 데이터가 없는 경우 : 회원이 존재하지 않음 -> 회원가입 안내
     if (getUserInfo.empty) {
-      console.log(getUserInfo.docs.map(doc => console.log(doc.data())));
+      // console.log(getUserInfo.docs.map(doc => console.log(doc.data())));
       return NextResponse.json(
         { message: "가입되지 않은 회원입니다. 회원가입 완료 후 로그인바랍니다." },
         { status: 400 },
@@ -50,11 +47,12 @@ export async function POST(req: NextRequest) {
         const accessToken = generateAccess(userInfo.userId);
         const refreshToken = generateRefresh(userInfo.userId);
 
-        console.log(matchedUser.data());
-        const pinNum = matchedUser.data().pinNum || "";
+        // console.log(matchedUser.data());
+        const pinExist = matchedUser.data().pinNum ? true : false;
+        const name = matchedUser.data().name;
 
         return NextResponse.json(
-          { accessToken, pinNum },
+          { accessToken, pinExist, name },
           {
             headers: {
               "Set-cookie": `refreshToken=${refreshToken}; HttpOnly; Secure; Path=/; Max-Age=1209600; SameSite=Strict`,

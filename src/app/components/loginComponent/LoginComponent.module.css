@@ -40,6 +40,11 @@
   background-color: #f9b179;
   border: 0;
   border-radius: 8px;
+  cursor: pointer;
+}
+.submitBtn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
 .contentsForGuest {
   color: #9fa2ae;
@@ -50,6 +55,17 @@
   background-color: transparent;
   cursor: pointer;
 }
+
+.pinLoginBtn {
+  width: 300px;
+  height: 50px;
+  margin-bottom: 32px;
+  background-color: #605be2;
+  border-radius: 8px;
+  border: 0;
+  cursor: pointer;
+}
+
 .googleBtn {
   display: flex;
   align-items: center;

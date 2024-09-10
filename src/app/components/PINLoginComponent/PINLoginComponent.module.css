@@ -5,15 +5,34 @@
   font-size: 44px;
 }
 .pinContents {
-  width: 420px;
+  width: 430px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+.pinLabel {
+  text-align: start;
+  color: #9fa2ae;
+  margin: 0 10px;
+  align-self: flex-start;
+}
+.pinInput {
+  width: 410px;
+  height: 50px;
+  margin: 20px 10px;
+  background-color: transparent;
+  border: 1px solid #9fa2ae;
+  border-radius: 8px;
+  outline: none;
+  color: #f9b179;
+}
 .pinList {
+  padding-left: 0;
   display: flex;
+  justify-content: start;
 }
 .pinItem {
+  list-style: none;
   margin: 10px;
   width: 50px;
   height: 50px;
@@ -62,7 +81,7 @@
   cursor: pointer;
 }
 .confirmBtn {
-  margin: 100px 10px;
+  margin: 40px 10px;
   font-size: 20px;
   width: 410px;
   height: 40px;
@@ -71,6 +90,10 @@
   border-radius: 8px;
   background-color: #f9b179;
   cursor: pointer;
+}
+.confirmBtn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
 
 .visibility {
