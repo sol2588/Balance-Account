@@ -1,10 +1,12 @@
 "use client";
-import { useState, useEffect } from "react";
+
 import { useRouter } from "next/navigation";
 import styles from "./LoginSuccessComponent.module.css";
 
 export default function LoginSuccessComponent() {
   const router = useRouter();
+  const persistData = sessionStorage.getItem("persist:root");
+  const userData = persistData ? JSON.parse(JSON.parse(persistData).user) : null;
 
   return (
     <section className={styles.successContainer}>
@@ -13,8 +15,7 @@ export default function LoginSuccessComponent() {
       </header>
 
       <div className={styles.pinContents}>
-        {/* // ! userName 받아오기 */}
-        <h4 className={styles.successMsg}>🎉 환영합니다, `${`이름`}`님!</h4>
+        <h4 className={styles.successMsg}>🎉 환영합니다, {userData.userName}님!</h4>
         <div className={styles.pinDesc}>
           간편 로그인 기능을 설정하여 빠르고 안전하게
           <br />

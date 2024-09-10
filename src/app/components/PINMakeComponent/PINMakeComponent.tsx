@@ -34,11 +34,7 @@ export default function PINMakeComponent() {
     try {
       const response = await axios.post("/api/pin/make", { pin });
       if (response.status == 200) {
-        console.log(response);
         setShowRst(response.data.message);
-        // setTimeout(() => {
-        //   router.push("/pin/login");
-        // }, 1000);
       }
     } catch (err: unknown) {
       console.log(err);
@@ -58,33 +54,35 @@ export default function PINMakeComponent() {
           6자리 숫자로 로그인할 수 있어요.
         </div>
 
-        <div>
-          <form className={styles.pinForm} action="/pin/make" method="post" onSubmit={handleSubmit}>
-            <input
-              className={styles.pinInput}
-              type="password"
-              value={pin}
-              name="pin"
-              maxLength={6}
-              onChange={handlerPin}
-            />
-            <input
-              className={styles.pinInput}
-              type="password"
-              value={pinCheck}
-              name="pinCheck"
-              maxLength={6}
-              onChange={handlerPinCheck}
-            />
-            {message && <div>{message}</div>}
-            <button
-              className={styles.submitBtn}
-              disabled={message == "PIN 번호가 일치하지 않습니다." || !pinCheck || pinCheck.length != 6}
-            >
-              확인
-            </button>
-          </form>
-        </div>
+        <form className={styles.pinForm} action="/pin/make" method="post" onSubmit={handleSubmit}>
+          <label htmlFor="pinPW">간편번호 입력</label>
+          <input
+            className={styles.pinInput}
+            type="password"
+            id="pinPw"
+            value={pin}
+            name="pin"
+            maxLength={6}
+            onChange={handlerPin}
+          />
+          <label htmlFor="pinPW">간편번호 확인</label>
+          <input
+            className={styles.pinInput}
+            type="password"
+            id="pinChk"
+            value={pinCheck}
+            name="pinCheck"
+            maxLength={6}
+            onChange={handlerPinCheck}
+          />
+          {message && <div>{message}</div>}
+          <button
+            className={styles.submitBtn}
+            disabled={message == "PIN 번호가 일치하지 않습니다." || !pinCheck || pinCheck.length != 6}
+          >
+            확인
+          </button>
+        </form>
       </div>
       {showRst && <div>{showRst}</div>}
     </section>

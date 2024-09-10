@@ -16,6 +16,7 @@
 .pinForm {
   display: flex;
   flex-direction: column;
+  margin: 32px 0;
 }
 .pinInput {
   font-size: 16px;
@@ -35,4 +36,8 @@
   background-color: #f9b179;
   border-radius: 8px;
   cursor: pointer;
+}
+.submitBtn :disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }

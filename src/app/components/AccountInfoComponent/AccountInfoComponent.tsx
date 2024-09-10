@@ -1,18 +1,33 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { IoIosAddCircle } from "react-icons/io";
 import styles from "./AccountInfoComponent.module.css";
+import axios from "axios";
 
 export default function AccountInfoComponent() {
-  const [account, setAccount] = useState("");
-  const [balance, setBalance] = useState();
+  const [account, setAccount] = useState<string>("");
+  const [balance, setBalance] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
   const router = useRouter();
 
   useEffect(() => {
-    const accountInfo = sessionStorage.getItem("accountInfo");
-    setAccount(accountInfo ? JSON.parse(accountInfo).account : "");
-    setBalance(accountInfo ? JSON.parse(accountInfo).balance : "");
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/accountInfo");
+        if (response.status == 200) {
+          const { accountInfo } = response.data;
+          setAccount(accountInfo.account);
+          setBalance(accountInfo.balance);
+        }
+      } catch (err: any) {
+        console.log(err);
+        setMessage(err?.response.data.message);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -49,6 +64,7 @@ export default function AccountInfoComponent() {
           <a href="/createAccount">
             <IoIosAddCircle className={styles.accountButton} />
           </a>
+          {message && <span>{message}</span>}
         </section>
       )}
     </>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/utils/database";
-import { getDoc, getDocs, collection, setDoc, doc, query, QuerySnapshot } from "firebase/firestore";
+import { getDocs, collection, setDoc, doc, query } from "firebase/firestore";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { cookies } from "next/headers";
 

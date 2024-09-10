@@ -22,7 +22,6 @@ export async function POST(req: NextRequest) {
       await updateDoc(userRef, {
         pinNum: pin,
       });
-      console.log(pin);
       return NextResponse.json({ message: "PIN이 저장되었습니다." }, { status: 200 });
     } catch (err) {
       return NextResponse.json({ message: "server error" }, { status: 500 });
