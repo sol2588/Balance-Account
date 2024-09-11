@@ -5,7 +5,6 @@ import { cookies } from "next/headers";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 export async function GET(req: NextRequest) {
-  console.log("right now");
   if (req.method == "GET") {
     try {
       const cookieStore = cookies();
@@ -14,17 +13,9 @@ export async function GET(req: NextRequest) {
       if (!getUserData) {
         return NextResponse.json({ message: "Unauthorized, no token" }, { status: 401 });
       }
-
       const decoded = getUserData ? jwt.verify(getUserData, process.env.PRIVATE_KEY as string) : "";
       const { userId } = decoded as JwtPayload;
 
-      // 하위에 하위 => 다시말해서 users - accont
-      const userDocRef = doc(db, "users", `user_${userId}`);
-      const userDoc = await getDoc(userDocRef);
-
-      if (!userDoc.exists()) {
-        return NextResponse.json({ message: "존재하지 않는 사용자입니다. " }, { status: 400 });
-      }
       // 계좌정보가 있다면 가져오기
       const accountRef = doc(collection(db, "users", `user_${userId}`, "account"), `account_${userId}`);
       const accountSnapshot = await getDoc(accountRef);

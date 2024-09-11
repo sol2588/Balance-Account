@@ -54,6 +54,7 @@ export default function LoginComponent() {
             dispatch(setLoginSuccess({ id: userId, token: response.data.token, name: response.data.name }));
             router.push("/main");
           } else {
+            dispatch(setLoginSuccess({ id: userId, token: response.data.token, name: response.data.name }));
             router.push("/login/success");
           }
         }
@@ -108,13 +109,13 @@ export default function LoginComponent() {
         간편로그인 하기
       </button>
 
-      <button className={styles.googleBtn} onClick={googleLogin}>
+      <button type="button" className={styles.googleBtn} onClick={googleLogin}>
         <img src="/web_light_sq_SU@2x.png" alt="Sign in with Google" />
       </button>
 
       <p className={styles.contentsForGuest}>
         New User?{" "}
-        <button className={styles.guestBtn} onClick={() => router.push("/signup")}>
+        <button type="button" className={styles.guestBtn} onClick={() => router.push("/signup")}>
           SignUp
         </button>
       </p>

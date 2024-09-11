@@ -2,15 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 import { IoIosAddCircle } from "react-icons/io";
 import styles from "./AccountInfoComponent.module.css";
 import axios from "axios";
+import { makeAccountSuccess } from "@/lib/actions/accountActions";
 
 export default function AccountInfoComponent() {
   const [account, setAccount] = useState<string>("");
   const [balance, setBalance] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const router = useRouter();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,6 +21,7 @@ export default function AccountInfoComponent() {
         const response = await axios.get("/api/accountInfo");
         if (response.status == 200) {
           const { accountInfo } = response.data;
+          dispatch(makeAccountSuccess({ account: accountInfo.account, balance: accountInfo.balance }));
           setAccount(accountInfo.account);
           setBalance(accountInfo.balance);
         }
@@ -64,7 +68,7 @@ export default function AccountInfoComponent() {
           <a href="/createAccount">
             <IoIosAddCircle className={styles.accountButton} />
           </a>
-          {message && <span>{message}</span>}
+          {message && <span className={styles.messageBox}>{message}</span>}
         </section>
       )}
     </>

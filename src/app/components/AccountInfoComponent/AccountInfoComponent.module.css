@@ -47,3 +47,7 @@
   font-size: 10rem;
   color: black;
 }
+.messageBox {
+  display: block;
+  color: #e86969;
+}

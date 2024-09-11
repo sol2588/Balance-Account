@@ -10,7 +10,7 @@ export default function AuthCheck() {
   console.log(isLoggedIn);
 
   useEffect(() => {
-    if (pathname != "/signup" && pathname != "/pin/login" && !isLoggedIn) {
+    if (pathname != "/signup" && pathname != "/pin/login" && pathname != "/" && !isLoggedIn) {
       router.push("/login");
       return;
     }

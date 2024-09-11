@@ -1,19 +1,18 @@
 import { useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import { RootState } from "@/lib/reducer";
 
-const withAuthAccount = WrappedComponent => {
-  return props => {
-    const router = useRouter();
-    let accountInfo = "";
+const withAuthAccount = (WrappedComponent: () => JSX.Element) => (props: any) => {
+  const selector = useSelector((state: RootState) => state.account);
+  console.log("selector 반환값 확인", selector, selector.created);
+  const router = useRouter();
 
-    useEffect(() => {
-      if (!accountInfo) {
-        router.push("/createAccount");
-      } else {
-        return;
-      }
-    }, []);
-    return <WrappedComponent {...props} />;
-  };
+  useEffect(() => {
+    if (!selector) {
+      router.push("/createAccount");
+    }
+  }, []);
+  return <WrappedComponent {...props} />;
 };
 export default withAuthAccount;
