@@ -1,20 +1,21 @@
 "use client";
 
-import styles from "./CreateAccountComponent.module.css";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 import { makeAccountSuccess } from "@/lib/actions/accountActions";
 import { RootState } from "@/lib/reducer";
+import { LiaUserFriendsSolid, LiaPiggyBankSolid } from "react-icons/lia";
+import { GiReceiveMoney } from "react-icons/gi";
+import styles from "./CreateAccountComponent.module.css";
+import axios from "axios";
 
 export default function CreateAccountComponent() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [errMessage, setErrMessage] = useState("");
+  const [message, setMessage] = useState("");
 
   const create = useSelector((state: RootState) => state.account.created);
-
   const handleButton = async () => {
     try {
       const response = await axios.get("/api/createAccount");
@@ -23,33 +24,14 @@ export default function CreateAccountComponent() {
           account: response.data.account,
           balance: response.data.balance,
         };
-
+        setMessage(response.data.message);
         dispatch(makeAccountSuccess(accountData));
-        sessionStorage.setItem("accountInfo", JSON.stringify(accountData));
-        router.push("/main");
       }
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        if (err?.response?.data?.message) {
-          if (err.response.data.message === "Account has already created") {
-            // ? 모달창 필요할듯
-            const dispatchData = {
-              account: err.response.data.account,
-              balance: err.response.data.balance,
-            };
-
-            dispatch(makeAccountSuccess(dispatchData));
-            sessionStorage.setItem("accountInfo", JSON.stringify(dispatchData));
-            setErrMessage("계좌가 이미 존재합니다. 메인페이지로 이동해주세요");
-          } else {
-            setErrMessage(err.response.data.message);
-          }
-        } else {
-          setErrMessage("계좌 생성 중 문제가 발생했습니다. 다시 시도해주세요.");
-        }
+    } catch (err: any) {
+      if (err.response.data.message === "Account has already created") {
+        setMessage("계좌가 이미 존재합니다. 메인페이지로 이동해주세요");
       } else {
-        // 다른 종류의 에러일 경우에 대한 처리
-        setErrMessage("예기치 못한 오류가 발생했습니다.");
+        setMessage("계좌생성 중 문제가 발생했습니다. 다시 시도해주세요.");
       }
     }
   };
@@ -60,15 +42,30 @@ export default function CreateAccountComponent() {
         <h3 className={styles.title}>Create Account</h3>
       </header>
       <ul className={styles.featList}>
-        <li className={styles.featItem}>첫 사용자도 손쉬운 사용</li>
-        <li className={styles.featItem}>지인 추가로 빠른 송금</li>
-        <li className={styles.featItem}>저축도우미</li>
+        <li className={styles.featItem}>
+          <GiReceiveMoney className={styles.iconButton} />
+          <span className={styles.itemDesc}>첫 사용자도 손쉬운 사용</span>
+        </li>
+        <li className={styles.featItem}>
+          <LiaUserFriendsSolid className={styles.iconButton} />
+          <span className={styles.itemDesc}>지인 추가로 빠른 송금</span>
+        </li>
+        <li className={styles.featItem}>
+          <LiaPiggyBankSolid className={styles.iconButton} />
+          <span className={styles.itemDesc}>저축도우미</span>
+        </li>
       </ul>
 
-      {errMessage.length && <p>{errMessage}</p>}
-      <button className={styles.button} onClick={handleButton}>
-        사용해보기
-      </button>
+      {message && <span className={styles.showMessage}>{message}</span>}
+      {message ? (
+        <button type="button" className={styles.button} onClick={() => router.push("/main")}>
+          메인페이지로 가기
+        </button>
+      ) : (
+        <button type="button" className={styles.button} onClick={handleButton}>
+          사용해보기
+        </button>
+      )}
     </section>
   );
 }

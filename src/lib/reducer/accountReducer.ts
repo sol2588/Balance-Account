@@ -19,6 +19,13 @@ const accountReducer = (state = initialState, action: any): AccountProps => {
         account: action.payload.account,
         balance: action.payload.balance,
       };
+    case "SET_ACCOUNT_LOGOUT": {
+      return {
+        ...state,
+        account: "",
+        balance: "",
+      };
+    }
 
     default:
       return state;

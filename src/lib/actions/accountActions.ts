@@ -6,8 +6,8 @@ export const makeAccountSuccess = (accountData: any) => ({
   },
 });
 
-export const makeAccountFail = () => ({
-  type: "MAKE_ACCOUNT_FAIL",
+export const setAccountLogout = () => ({
+  type: "SET_ACCOUNT_LOGOUT",
   payload: {
     account: null,
     balance: null,

@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setLogoutSuccess } from "@/lib/actions/userActions";
+import { setAccountLogout } from "@/lib/actions/accountActions";
 
 export default function LogoutButton() {
   const dispatch = useDispatch();
@@ -12,12 +13,8 @@ export default function LogoutButton() {
 
     try {
       if (response.status == 200) {
-        // 전역상태 : 로그아웃(isLoggedIn : false)
         dispatch(setLogoutSuccess());
-        sessionStorage.removeItem("accessToken");
-        // ! accountInfo 삭제
-        sessionStorage.removeItem("accountInfo");
-        sessionStorage.setItem("loginState", "false");
+        dispatch(setAccountLogout());
         router.push("/");
       } else {
         console.log(new Error());

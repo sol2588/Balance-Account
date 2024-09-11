@@ -51,10 +51,22 @@ export default function LoginComponent() {
         const response = await axios.post("/api/auth/login/callback", { authCode: authCode.code });
         if (response.status == 200) {
           if (response.data.pinExist) {
-            dispatch(setLoginSuccess({ id: userId, token: response.data.token, name: response.data.name }));
+            dispatch(
+              setLoginSuccess({
+                id: response.data.userId,
+                token: response.data.token,
+                name: response.data.name,
+              }),
+            );
             router.push("/main");
           } else {
-            dispatch(setLoginSuccess({ id: userId, token: response.data.token, name: response.data.name }));
+            dispatch(
+              setLoginSuccess({
+                id: response.data.userId,
+                token: response.data.token,
+                name: response.data.name,
+              }),
+            );
             router.push("/login/success");
           }
         }

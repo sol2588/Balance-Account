@@ -50,9 +50,10 @@ export async function POST(req: NextRequest) {
         // console.log(matchedUser.data());
         const pinExist = matchedUser.data().pinNum ? true : false;
         const name = matchedUser.data().name;
+        const userId = userInfo.id;
 
         return NextResponse.json(
-          { accessToken, pinExist, name },
+          { accessToken, pinExist, name, userId },
           {
             headers: {
               "Set-cookie": `refreshToken=${refreshToken}; HttpOnly; Secure; Path=/; Max-Age=1209600; SameSite=Strict`,
