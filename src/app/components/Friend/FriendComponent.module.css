@@ -30,12 +30,6 @@
   padding: 10px 5px;
   text-align: left;
 }
-/* 
-#2B304D
-#3F4364 
-#626B96
-#F5F5F5
-#EFAA75  */
 
 .recentTableRow td {
   padding: 10px 5px;
@@ -63,4 +57,9 @@
   color: #9fa2ae;
   font-size: 20px;
   font-weight: 500;
+}
+
+.informMessage {
+  font-size: 20px;
+  margin: 32px 0;
 }

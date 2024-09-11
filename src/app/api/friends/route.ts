@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
           {
             message: {
               recentMsg: "최근 거래내역이 없습니다. ",
-              friendMsg: "추가된 친구가 없습니다.",
+              friendMsg: "추가된 친구가 아직 없습니다.",
             },
           },
           { status: 200 },
@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
         );
       } else if (friendsData.length == 0) {
         return NextResponse.json(
-          { recetData: recentDatas, message: { friendMsg: "추가된 친구가 없습니다." } },
+          { recentData: recentDatas, message: { friendMsg: "추가된 친구가 아직 없습니다." } },
           { status: 200 },
         );
       } else {
@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
     }
   }
 }
-// ! 데이터 가져와야함 - 기존에 있던 친구면 message 반환 & 이미 등록된 친구입니다. (alert)
+
 export async function POST(req: NextRequest) {
   if (req.method === "POST") {
     try {
@@ -68,6 +68,7 @@ export async function POST(req: NextRequest) {
       const { userId } = decoded as JwtPayload;
 
       const { checkList } = await req.json();
+      // checkList에 담긴 계좌가 accountsInfo 존재하는지 check하고 data 담기
       if (checkList && checkList.length > 0) {
         const recentQuery = query(collection(db, "accountsInfo"), where("account", "in", checkList));
         const recentSnapshot = await getDocs(recentQuery);
@@ -77,8 +78,19 @@ export async function POST(req: NextRequest) {
           const friendRef = doc(collection(db, "users", `user_${userId}`, "friends"), `friends_${account.account}`);
           await setDoc(friendRef, account);
         }
-        console.log(accountForFriends);
-        return NextResponse.json({ accountForFriends }, { status: 200 });
+
+        // 기존 친구 목록 가져오기
+        const friendQuery = query(collection(db, "users", `user_${userId}`, "friends"));
+        const friendSnapshot = await getDocs(friendQuery);
+        const friendsData = friendSnapshot.docs.map(doc => doc.data().account);
+        console.log(friendsData);
+        for (const friend of friendsData) {
+          if (checkList.includes(friend)) {
+            return NextResponse.json({ message: "이미 존재하는 친구입니다." }, { status: 400 });
+          } else {
+            return NextResponse.json({ accountForFriends }, { status: 200 });
+          }
+        }
       } else {
         return NextResponse.json({ message: "No accounts provided" }, { status: 400 });
       }

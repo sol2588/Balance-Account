@@ -28,6 +28,8 @@ interface TargetInfoProps {
 export default function TransActionComponent() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const modalState = useSelector((state: RootState) => state.modal.isOpen);
+  const accountState = useSelector((state: RootState) => state.account);
 
   // ! transaction 새로고침하면 login 풀리는 현상 있음 + authCheck확인
   const [accountInfo, setAccountInfo] = useState<AccountProps>();
@@ -47,8 +49,6 @@ export default function TransActionComponent() {
   const [notAllowedMessage, setNotAllowedMessage] = useState<string>();
   const [transferResult, setTransferResult] = useState<string>("");
 
-  const modalState = useSelector((state: RootState) => state.modal.isOpen);
-  const accountState = useSelector((state: RootState) => state.account);
   // 계좌 정보 가져오기(redux)
   useEffect(() => {
     setAccountInfo({ account: accountState.account, balance: accountState.balance } || {});
