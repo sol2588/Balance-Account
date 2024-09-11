@@ -1,9 +1,9 @@
 "use client";
-import BarChart from "./Chart";
 import { useState, useEffect, ChangeEvent } from "react";
-import axios from "axios";
-import styles from "./ChartComponent.module.css";
+import BarChart from "./Chart";
 import { Timestamp } from "firebase/firestore";
+import styles from "./ChartComponent.module.css";
+import axios from "axios";
 
 interface FullDataProps {
   account: string;
@@ -17,10 +17,11 @@ interface ExpenseProps {
   [key: string]: number;
 }
 
-// ! month는 string, year는 number => 일치
+// ! month는 string, year는 number => 일치시키기
 export default function ChartComponent() {
   const [selectYear, setSelectyear] = useState<number>(new Date().getFullYear());
   const [selectMonth, setSelectMonth] = useState<string>();
+  const [noDataMessage, setNoDataMessage] = useState<string>("");
   const [isDay, setIsDay] = useState<boolean>(false);
   const [fullData, setFullData] = useState<FullDataProps[]>();
   const [expenses, setExpenses] = useState<ExpenseProps>({});
@@ -33,6 +34,8 @@ export default function ChartComponent() {
         if (response.status == 200) {
           const data = response.data.allTransactionData;
           setFullData(data);
+        } else if (response.status == 200 && response.data.message) {
+          setNoDataMessage(response.data.message);
         }
       } catch (err) {
         console.log(err);
@@ -45,9 +48,8 @@ export default function ChartComponent() {
     const updateExpenses: ExpenseProps = {};
     if (isDay) {
       const dates = selectMonth ? new Date(selectYear, parseInt(selectMonth.slice(0, 1)), 0).getDate() : 0;
-      const updatedDayExpenses: ExpenseProps = {};
       for (let day = 1; day <= dates; day++) {
-        updatedDayExpenses[`${day}일`] = 0;
+        updateExpenses[`${day}일`] = 0;
       }
     } else {
       ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"].forEach(
@@ -63,10 +65,11 @@ export default function ChartComponent() {
       const date = `${targetDate.getDate()}일`;
 
       if (year == selectYear) {
-        if (isDay && selectMonth == month)
+        if (isDay && selectMonth == month) {
           updateExpenses[date] = (updateExpenses[date] || 0) + parseInt(item.sendMoney.replaceAll(",", ""));
-      } else if (!isDay) {
-        updateExpenses[month] += parseInt(item.sendMoney.replaceAll(",", ""));
+        } else if (!isDay) {
+          updateExpenses[month] += parseInt(item.sendMoney.replaceAll(",", ""));
+        }
       }
     });
     setExpenses(updateExpenses);
@@ -108,28 +111,35 @@ export default function ChartComponent() {
         <h3 className={styles.title}>Chart</h3>
       </header>
       <div className={styles.chartArea}>
-        <select value={selectYear} onChange={onChangeYear}>
-          <option value={2024}>2024</option>
-          <option value={2023}>2023</option>
-          <option value={2022}>2022</option>
-        </select>
+        <div className={styles.buttonWrapper}>
+          <span className={styles.chartDesc}>
+            년도를 조회하거나 월별보기 버튼을 선택후 조회하고 싶은 월을 선택하시기 바랍니다.
+          </span>
+          <select className={styles.selectYearBtn} value={selectYear} onChange={onChangeYear}>
+            <option value={2024}>2024</option>
+            <option value={2023}>2023</option>
+            <option value={2022}>2022</option>
+          </select>
 
-        <button onClick={() => setIsDay(true)}>월별보기</button>
+          <button type="button" className={styles.chooseMonthBtn} onClick={() => setIsDay(true)}>
+            월별보기
+          </button>
 
-        <select value={selectMonth} onChange={onChangeMonth} disabled={!isDay}>
-          <option value="1월">1월</option>
-          <option value="2월">2월</option>
-          <option value="3월">3월</option>
-          <option value="4월">4월</option>
-          <option value="5월">5월</option>
-          <option value="6월">6월</option>
-          <option value="7월">7월</option>
-          <option value="8월">8월</option>
-          <option value="9월">9월</option>
-          <option value="10월">10월</option>
-          <option value="11월">11월</option>
-          <option value="12월">12월</option>
-        </select>
+          <select className={styles.selectMonthBtn} value={selectMonth} onChange={onChangeMonth} disabled={!isDay}>
+            <option value="1월">1월</option>
+            <option value="2월">2월</option>
+            <option value="3월">3월</option>
+            <option value="4월">4월</option>
+            <option value="5월">5월</option>
+            <option value="6월">6월</option>
+            <option value="7월">7월</option>
+            <option value="8월">8월</option>
+            <option value="9월">9월</option>
+            <option value="10월">10월</option>
+            <option value="11월">11월</option>
+            <option value="12월">12월</option>
+          </select>
+        </div>
 
         <BarChart data={chartData} />
       </div>

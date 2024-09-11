@@ -6,3 +6,38 @@
 .title {
   font-size: 44px;
 }
+.buttonWrapper {
+  margin-bottom: 32px;
+}
+.chartDesc {
+  display: block;
+  margin-bottom: 20px;
+}
+.selectYearBtn {
+  padding: 10px 20px;
+  margin-right: 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #f9b179;
+  cursor: pointer;
+}
+.chooseMonthBtn {
+  padding: 10px 20px;
+  margin-right: 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #f9b179;
+  cursor: pointer;
+}
+.selectMonthBtn {
+  padding: 10px 20px;
+  margin-right: 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #e254cd;
+  cursor: pointer;
+}
+.selectMonthBtn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}

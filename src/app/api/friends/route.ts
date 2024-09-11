@@ -69,6 +69,7 @@ export async function POST(req: NextRequest) {
 
       const { checkList } = await req.json();
       // checkList에 담긴 계좌가 accountsInfo 존재하는지 check하고 data 담기
+      // ! 리팩토링
       if (checkList && checkList.length > 0) {
         const recentQuery = query(collection(db, "accountsInfo"), where("account", "in", checkList));
         const recentSnapshot = await getDocs(recentQuery);
