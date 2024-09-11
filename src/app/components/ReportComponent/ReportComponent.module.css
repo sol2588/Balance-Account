@@ -7,6 +7,22 @@
   text-align: start;
   margin-bottom: 0;
 }
+.btnWrapper {
+  margin-bottom: 32px;
+}
+.reportDesc {
+  font-size: 16px;
+  font-weight: 400;
+}
+.selectBtn {
+  font-size: 20px;
+  padding: 10px 20px;
+  margin-right: 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #f9b179;
+  cursor: pointer;
+}
 .reportContents {
   margin: 20px 0;
 }
@@ -26,4 +42,39 @@
 .recentTableRow td {
   padding: 10px 5px;
   border-bottom: 1px solid #eee;
+}
+
+.space {
+  margin: 0 32px;
+}
+
+.clickPeroidBtn {
+  width: 75px;
+  padding: 10px 20px;
+  margin-right: 20px;
+  border: none;
+  border-radius: 20px;
+  background-color: #1f9cf0;
+  cursor: pointer;
+}
+.periodInput {
+  font-size: 16px;
+  min-width: 300px;
+  height: 50px;
+  margin: 20px 0;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  background-color: rgb(233, 233, 233);
+}
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  overflow: hidden;
+  white-space: nowrap;
 }

@@ -34,33 +34,28 @@ export default function ReportComponent() {
   const [endDate, setEndDate] = useState<string | undefined>();
 
   useEffect(() => {
-    // const fetchData = async () => {
-    //   try {
-    //     const response = await axios.get("/api/report");
-    //     if (response.status == 200) {
-    //       const data: FetchDataProps[] = response.data.recentTransaction;
-    //       const formattedData: RecentProps[] = data.map((d: FetchDataProps) => {
-    //         const timestamp = new Date(d.date.seconds * 1000);
-    //         const formattedDate = timestamp.toISOString().split("T")[0];
-    //         return { ...d, date: formattedDate };
-    //       });
-    //       setRecentData(formattedData);
-    //       localStorage.setItem("temp", JSON.stringify(formattedData));
-    //       console.log(formattedData);
-    //     } else {
-    //       console.log(response.data.message);
-    //       // * 메시지 반환되는지 확인
-    //       setMessage(response.data.message);
-    //     }
-    //   } catch (err: any) {
-    //     console.log(err.response.message);
-    //   }
-    // };
-    // fetchData();
-  }, []);
-  useEffect(() => {
-    const localValue = localStorage.getItem("temp")!;
-    setOriginData(JSON.parse(localValue));
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/report");
+        if (response.status == 200) {
+          const data: FetchDataProps[] = response.data.recentTransaction;
+          const formattedData: RecentProps[] = data.map((dataItem: FetchDataProps) => {
+            const timestamp = new Date(dataItem.date.seconds * 1000);
+            const formattedDate = timestamp.toISOString().split("T")[0];
+            return { ...dataItem, date: formattedDate };
+          });
+          setRecentData(formattedData);
+          setOriginData(formattedData);
+        } else {
+          console.log(response.data.message);
+          // ! 메시지 반환되는지 확인
+          setMessage(response.data.message);
+        }
+      } catch (err: any) {
+        console.log(err.response.message);
+      }
+    };
+    fetchData();
   }, []);
 
   const getTargetDate = (value: string) => {
@@ -109,8 +104,13 @@ export default function ReportComponent() {
         <h3 className={styles.reportHeader}>Report</h3>
       </header>
       <div role="buttonWrapper" className={styles.btnWrapper}>
-        <button onClick={() => setPurposeBtn(false)}>기간별</button>
-        <button onClick={() => setPurposeBtn(true)}>목록별</button>
+        <h5 className={styles.reportDesc}>검색필터</h5>
+        <button type="button" className={styles.selectBtn} onClick={() => setPurposeBtn(false)}>
+          기간별
+        </button>
+        <button type="button" className={styles.selectBtn} onClick={() => setPurposeBtn(true)}>
+          목록별
+        </button>
 
         {purposeBtn ? (
           <div className={styles.purposeWrapper}>
@@ -123,15 +123,30 @@ export default function ReportComponent() {
         ) : (
           <div className={styles.periodWrapper}>
             <div className={styles.datePick}>
-              <label htmlFor="startDate">시작날짜</label>
-              <input type="text" id="startDate" value={startDate} />
-              <label htmlFor="endDate">종료날짜</label>
-              <input type="text" id="endDate" value={endDate} />
+              <label className={styles.visuallyHidden} htmlFor="startDate">
+                시작날짜
+              </label>
+              <input
+                className={styles.periodInput}
+                type="text"
+                id="startDate"
+                value={startDate}
+                placeholder="시작날짜"
+              />
+              <span className={styles.space}>~</span>
+              <label className={styles.visuallyHidden} htmlFor="endDate">
+                종료날짜
+              </label>
+              <input className={styles.periodInput} type="text" id="endDate" value={endDate} placeholder="종료날짜" />
             </div>
-
-            <div className={styles.dateButton}>
+            <div className={styles.peroidBtnWrapper}>
               {periodOptions.map(option => (
-                <button key={option.value} value={option.value} onClick={handleClickMonth}>
+                <button
+                  className={styles.clickPeroidBtn}
+                  key={option.value}
+                  value={option.value}
+                  onClick={handleClickMonth}
+                >
                   {option.label}
                 </button>
               ))}
