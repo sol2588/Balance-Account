@@ -103,13 +103,31 @@
   margin-top: 20px;
   color: #fff;
 }
+.warningStatus {
+  margin: 20px 0;
+  font-size: 16px;
+  color: red;
+}
+.informStatus {
+  margin: 20px 0;
+  font-size: 16px;
+  color: rgb(93, 168, 238);
+}
+.informMessage {
+  display: block;
+  margin-top: 32px;
+  font-size: 16px;
+  color: rgb(93, 168, 238);
+}
 
 /* 거래 목적 */
 .targetPurpose {
   display: flex;
   flex-direction: column;
 }
-.choosePurpose {
+.purposeContent {
+  font-size: 20px;
+  display: block;
 }
 .purposeBtn {
   margin: 20px 10px 20px 0;
@@ -136,6 +154,10 @@
   background-color: #f9b179;
   cursor: pointer;
 }
+.chooseBtn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
 
 .transferResultWrapper {
   margin-top: 30px;
@@ -152,7 +174,7 @@
   color: rgb(231, 83, 83);
   font-size: 16px;
 }
-.informStatus {
-  font-size: 16px;
-  color: rgb(93, 168, 238);
+
+.notAllowedStatus {
+  display: block;
 }

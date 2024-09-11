@@ -7,9 +7,10 @@ interface setFunction {
   setMoney: React.Dispatch<React.SetStateAction<string | undefined>>;
   value: string | undefined;
   setMessage: React.Dispatch<React.SetStateAction<string | "">>;
+  title: string;
 }
 
-export default function CurrencyInput({ setMoney, value, setMessage }: setFunction) {
+export default function CurrencyInput({ setMoney, value, setMessage, title }: setFunction) {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     let strToNum = Number(value.replaceAll(",", ""));
@@ -44,7 +45,7 @@ export default function CurrencyInput({ setMoney, value, setMessage }: setFuncti
         id="charge"
         value={value}
         onChange={handleInput}
-        placeholder="충전 금액을 입력해주세요"
+        placeholder={`${title} 금액을 입력해주세요`}
       />
       <div role="group">
         <button className={styles.button} name="amount" value="5000" onClick={handleClickMoney}>

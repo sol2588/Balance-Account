@@ -2,19 +2,20 @@
 
 import { MouseEvent, ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import styles from "./TransactionComponent.module.css";
-import CurrencyInput from "../common/currencyInput/CurruncyInput";
-import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/lib/reducer";
+import { setAccountCharge } from "@/lib/actions/accountActions";
 import { modalOpen } from "@/lib/actions/modalActions";
-import Modal from "../common/modal/Modal";
+import { RootState } from "@/lib/reducer";
 import { SELECT_BANK } from "@/utils/data/selectBank";
 import { BUTTON_TYPES } from "@/utils/data/buttonTypes";
+import CurrencyInput from "../common/currencyInput/CurruncyInput";
+import Modal from "../common/modal/Modal";
+import styles from "./TransactionComponent.module.css";
+import axios from "axios";
 
 interface AccountProps {
-  account: string;
-  balance: string;
+  account: string | null;
+  balance: string | null;
 }
 interface TargetInfoProps {
   receiver: string;
@@ -28,54 +29,56 @@ export default function TransActionComponent() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [accountInfo, setAccountInfo] = useState<AccountProps | undefined>();
-  const [inputAccount, setInputAccount] = useState<string>();
-  const [message, setMessage] = useState<string>();
-  const [selected, setSelected] = useState<string>();
-  const [money, setMoney] = useState<string>();
-  const [transferRst, setTransferRst] = useState<boolean>(false);
-  const [overBalanceMsg, setOverBalanceMsg] = useState<string>();
-  const [targetInfo, setTargetInfo] = useState<TargetInfoProps>({
+  // ! transaction 새로고침하면 login 풀리는 현상 있음 + authCheck확인
+  const [accountInfo, setAccountInfo] = useState<AccountProps>();
+  const [bankSelected, setBankSelected] = useState<string>();
+  const [receiverAccount, setReceiverAccount] = useState<string>();
+  const [receiverData, setReceiverData] = useState<TargetInfoProps>({
     receiver: "",
     account: "",
     bank: "",
     transferAmount: "",
     transferStatus: null,
   });
+  const [money, setMoney] = useState<string>();
   const [purpose, setPurpose] = useState<string>();
+  const [accountMessage, setAccountMessage] = useState<string>();
+  const [confirmMessage, setConfirmMessage] = useState<string>();
+  const [notAllowedMessage, setNotAllowedMessage] = useState<string>();
+  const [transferResult, setTransferResult] = useState<string>("");
+
+  const modalState = useSelector((state: RootState) => state.modal.isOpen);
+  const accountState = useSelector((state: RootState) => state.account);
+  // 계좌 정보 가져오기(redux)
+  useEffect(() => {
+    setAccountInfo({ account: accountState.account, balance: accountState.balance } || {});
+  }, []);
 
   useEffect(() => {
-    dispatch(modalOpen({ title: "최초 거래입니다. 확인 후 송금 진행바랍니다." }));
-  }, [targetInfo.transferStatus]);
+    dispatch(modalOpen({ title: "첫번째 거래입니다. 한번 더 확인 후 송금하시기 바랍니다." }));
+  }, [receiverData.transferStatus]);
 
-  // ! dispatch로 accountInfo 갱신 필요
   useEffect(() => {
-    const storageItem = sessionStorage.getItem("accountInfo");
-    if (storageItem) {
-      setAccountInfo(JSON.parse(storageItem));
-    }
-
-    // !  금액 합당시 비활성화 해제 & 빨간버튼
-    const needBalance = Number(money?.replaceAll(",", ""));
-    const realBalance = Number(accountInfo?.balance.replaceAll(",", ""));
-    if (needBalance > realBalance) {
-      console.log(needBalance);
-      setOverBalanceMsg(`잔액이 부족합니다. 보낼 수 있는 금액은 ${realBalance.toLocaleString("ko-KR")}원 입니다.`);
+    const requiredAmount = Number(money?.replaceAll(",", ""));
+    const currentBalance = Number(accountInfo?.balance?.replaceAll(",", ""));
+    if (requiredAmount > currentBalance) {
+      setNotAllowedMessage(
+        `잔액이 부족합니다. 보낼 수 있는 금액은 ${currentBalance.toLocaleString("ko-KR")}원 입니다.`,
+      );
     } else {
-      setOverBalanceMsg("");
+      setNotAllowedMessage("");
     }
   }, [money]);
 
-  const modalState = useSelector((state: RootState) => state.modal.isOpen);
-
-  const handleButtonClick = async () => {
+  const handleReceiverAccount = async () => {
     try {
-      const extractAccount = inputAccount?.replaceAll("-", "");
-      const response = await axios.post("/api/transaction", { extractAccount, selected, action: "checkAccount" });
+      const extractAccount = receiverAccount?.replaceAll("-", "");
+      const response = await axios.post("/api/transaction", { extractAccount, bankSelected, action: "checkAccount" });
       if (response.status == 200) {
-        const { targetUser, targetAccount, targetBank, targetAmount, targetStatus } = response.data;
-        setTargetInfo({
-          ...targetInfo,
+        const { targetUser, targetAccount, targetBank, targetAmount, targetStatus, message } = response.data;
+        setConfirmMessage(`${targetStatus}번째 거래입니다.`);
+        setReceiverData({
+          ...receiverData,
           receiver: targetUser,
           account: targetAccount,
           bank: targetBank,
@@ -85,19 +88,19 @@ export default function TransActionComponent() {
       }
     } catch (err: any) {
       if (err.response) {
-        setMessage(err.response.data.message);
+        setAccountMessage(err.response.data.message);
       }
     }
   };
 
-  const handleClickTransfer = async () => {
+  const handleExecuteTransfer = async () => {
     try {
-      const response = await axios.post("/api/transaction", { action: "transfer", targetInfo, money, purpose });
+      const response = await axios.post("/api/transaction", { action: "transfer", receiverData, money, purpose });
       if (response.status == 200) {
         const { account, balance } = response.data.responseData;
-        sessionStorage.setItem("accountInfo", JSON.stringify({ account: account, balance: balance }));
+        dispatch(setAccountCharge(balance));
         setAccountInfo({ account: account, balance: balance });
-        setTransferRst(true);
+        setTransferResult("success");
       }
     } catch (err) {
       return err;
@@ -127,8 +130,8 @@ export default function TransActionComponent() {
         <header className={styles.receiverSubtitle}>누구에게 보낼까요?</header>
         <div className={styles.receiverInfo}>
           <select
-            value={selected}
-            onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelected(e.target.value)}
+            value={bankSelected}
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => setBankSelected(e.target.value)}
             required
           >
             {SELECT_BANK.map(item => (
@@ -140,44 +143,44 @@ export default function TransActionComponent() {
           <input
             type="text"
             className={styles.receiverAccountInput}
-            value={inputAccount}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setInputAccount(e.target.value)}
+            value={receiverAccount}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              setAccountMessage("");
+              setConfirmMessage("");
+              setReceiverAccount(e.target.value);
+            }}
             placeholder="계좌번호를 입력하세요"
           />
           <button
+            type="button"
             className={styles.submitBtn}
             onClick={() => {
-              handleButtonClick();
+              handleReceiverAccount();
             }}
-            disabled={!inputAccount || !selected}
+            disabled={!receiverAccount || !bankSelected}
           >
             다음
           </button>
-          {modalState && targetInfo.transferStatus == 0 && <Modal />}
-          {targetInfo.receiver && (
-            <p className={targetInfo.transferStatus == 0 ? styles.warningStatus : styles.informStatus}>
-              {targetInfo.transferStatus}번째 거래 입니다.
-            </p>
-          )}
-          {targetInfo.transferStatus == 0 && <Modal />}
+          {modalState && receiverData.transferStatus == 0 && <Modal />}
+          {confirmMessage && <p className={styles.informStatus}>{confirmMessage}</p>}
         </div>
-        {message && <p>{message}</p>}
+        {accountMessage && <span className={styles.informMessage}>{accountMessage}</span>}
       </div>
 
       {/* 보낼 금액 및 목적 */}
-      {targetInfo.receiver && (
+      {receiverData.receiver && confirmMessage && (
         <div className={styles.targetWrapper}>
           <div className={styles.targetAccountInfo}>
-            <span className={styles.targetReceiver}>{targetInfo.receiver}님</span>
+            <span className={styles.targetReceiver}>{receiverData.receiver}님</span>
             <span className={styles.targetAccountBank}>
-              {targetInfo.bank} {targetInfo.account}
+              {receiverData.bank} {receiverData.account}
             </span>
           </div>
 
           <div className={styles.targetDatas}>
             <div className={styles.targetMoney}>
               <span className={styles.targetAmount}>얼마를 보내시겠습니까?</span>
-              <CurrencyInput value={money} setMoney={setMoney} />
+              <CurrencyInput value={money} setMoney={setMoney} setMessage={setTransferResult} title="송금" />
             </div>
             <div className={styles.targetPurpose}>
               <span className={styles.purposeTitle}>송금 목적을 선택해주세요</span>
@@ -187,7 +190,6 @@ export default function TransActionComponent() {
                     key={`${idx}_${btn}`}
                     className={styles.purposeBtn}
                     onClick={(e: MouseEvent<HTMLButtonElement>) => {
-                      console.log(e);
                       const { innerText } = e.target as HTMLButtonElement;
                       setPurpose(innerText);
                     }}
@@ -195,20 +197,23 @@ export default function TransActionComponent() {
                     {btn}
                   </button>
                 ))}
+                <span className={styles.purposeContent}>송금 목적 : {purpose}</span>
               </div>
             </div>
           </div>
 
+          {/* 버튼 영역 */}
           <div className={styles.chooseBtnWrapper}>
-            {overBalanceMsg && <p className={styles.warningStatus}>{overBalanceMsg}</p>}
+            {notAllowedMessage && <span className={styles.notAllowedStatus}>{notAllowedMessage}</span>}
             <button
+              type="button"
               className={styles.chooseBtn}
-              onClick={handleClickTransfer}
-              disabled={overBalanceMsg != "" || !money || !purpose}
+              onClick={handleExecuteTransfer}
+              disabled={notAllowedMessage != "" || !money || !purpose}
             >
               송금하기
             </button>
-            <button className={styles.chooseBtn} onClick={() => router.push("/main")}>
+            <button type="button" className={styles.chooseBtn} onClick={() => router.push("/main")}>
               송금 취소
             </button>
           </div>
@@ -216,10 +221,10 @@ export default function TransActionComponent() {
       )}
 
       {/* 송금 결과 확인 창 */}
-      {transferRst && (
+      {transferResult && (
         <div className={styles.transferResultWrapper}>
           <p className={styles.transferResult}>
-            {targetInfo.receiver}님께 {money}을 보냈습니다.
+            {receiverData.receiver}님께 {money}을 보냈습니다.
           </p>
         </div>
       )}

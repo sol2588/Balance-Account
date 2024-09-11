@@ -72,7 +72,7 @@ export default function ChargeComponent() {
         </div>
       </div>
       <div className={styles.chargeDataWrapper}>
-        <CurrencyInput value={chargeAmount} setMoney={setChargeAmount} setMessage={setChargeMessage} />
+        <CurrencyInput value={chargeAmount} setMoney={setChargeAmount} setMessage={setChargeMessage} title="충전" />
         <div>
           <button type="button" className={styles.chargeBtn} onClick={handleClickCharge} disabled={!chargeAmount}>
             충전하기

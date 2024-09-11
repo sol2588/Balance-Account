@@ -28,14 +28,14 @@ export async function POST(req: NextRequest) {
       const decoded = getUserData ? jwt.verify(getUserData, process.env.PRIVATE_KEY as string) : "";
       const { userId } = decoded as JwtPayload;
 
-      const { extractAccount, selected, targetInfo, money, action, purpose } = await req.json();
+      const { extractAccount, bankSelected, receiverData, money, action, purpose } = await req.json();
 
       if (action === "checkAccount") {
         // 2) db에서 계좌 정보 가져오기 - where로 필터링(사용자가 입력한 계좌&은행과 일치하는 지 확인)
         const accountsQuery = query(
           collection(db, "accountsInfo"),
           where("account", "==", extractAccount),
-          where("bank", "==", selected),
+          where("bank", "==", bankSelected),
         );
         const accountsSnapshot = await getDocs(accountsQuery);
         const matchedData = accountsSnapshot.docs.map(doc => doc.data()).find(data => data.account == extractAccount);
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
           if (!recentSnapshot.empty) {
             updateTargetInfo.targetStatus = recentSnapshot.size + 1;
           }
-          return NextResponse.json({ ...updateTargetInfo }, { status: 200 });
+          return NextResponse.json({ ...updateTargetInfo, message: "계좌가 확인되었습니다." }, { status: 200 });
         } else {
           return NextResponse.json(
             { message: "계좌정보가 올바르지 않습니다. 확인하여 입력바랍니다." },
@@ -77,12 +77,12 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ message: "Account not found" }, { status: 404 });
         }
 
-        const originAmount = Number(userAccountInfo?.balance.replaceAll(",", ""));
+        const currentAmount = Number(userAccountInfo?.balance.replaceAll(",", ""));
         const transferMoney = Number(money.replaceAll(",", ""));
 
         await setDoc(userDocRef, {
           ...userAccountInfo,
-          balance: (originAmount - transferMoney).toLocaleString("ko-KR"),
+          balance: (currentAmount - transferMoney).toLocaleString("ko-KR"),
         });
 
         // 송금할때 마다 최근 송금내역 저장(recentTransaction db 추가)
@@ -94,9 +94,9 @@ export async function POST(req: NextRequest) {
         await setDoc(recentRef, {
           idx: num,
           date: new Date(),
-          account: targetInfo.account,
-          name: targetInfo.receiver,
-          bank: targetInfo.bank,
+          account: receiverData.account,
+          name: receiverData.receiver,
+          bank: receiverData.bank,
           sendMoney: money,
           purpose: purpose,
         });
@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
           {
             responseData: {
               ...userAccountInfo,
-              balance: (originAmount - transferMoney).toLocaleString("ko-KR"),
+              balance: (currentAmount - transferMoney).toLocaleString("ko-KR"),
             },
           },
           { status: 200 },
