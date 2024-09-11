@@ -19,13 +19,18 @@ const accountReducer = (state = initialState, action: any): AccountProps => {
         account: action.payload.account,
         balance: action.payload.balance,
       };
-    case "SET_ACCOUNT_LOGOUT": {
+    // 계좌 : 변경없음, 충전금액 : 입력값으로 변경
+    case "SET_ACCOUNT_CHARGE":
+      return {
+        ...state,
+        balance: action.payload.balance,
+      };
+    case "SET_ACCOUNT_LOGOUT":
       return {
         ...state,
         account: "",
         balance: "",
       };
-    }
 
     default:
       return state;

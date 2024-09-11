@@ -6,6 +6,13 @@ export const makeAccountSuccess = (accountData: any) => ({
   },
 });
 
+export const setAccountCharge = (accountData: string) => ({
+  type: "SET_ACCOUNT_CHARGE",
+  payload: {
+    balance: accountData,
+  },
+});
+
 export const setAccountLogout = () => ({
   type: "SET_ACCOUNT_LOGOUT",
   payload: {

@@ -6,12 +6,14 @@ import styles from "./CurrencyInput.module.css";
 interface setFunction {
   setMoney: React.Dispatch<React.SetStateAction<string | undefined>>;
   value: string | undefined;
+  setMessage: React.Dispatch<React.SetStateAction<string | "">>;
 }
 
-export default function CurrencyInput({ setMoney, value }: setFunction) {
+export default function CurrencyInput({ setMoney, value, setMessage }: setFunction) {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     let strToNum = Number(value.replaceAll(",", ""));
+    setMessage("");
     if (isNaN(strToNum)) {
       setMoney("0");
     } else {
@@ -20,6 +22,7 @@ export default function CurrencyInput({ setMoney, value }: setFunction) {
   };
 
   const handleClickMoney = (e: MouseEvent<HTMLButtonElement>) => {
+    setMessage("");
     const clickedMoney = Number((e.target as HTMLButtonElement).value);
     setMoney(prev => {
       if (prev) {
