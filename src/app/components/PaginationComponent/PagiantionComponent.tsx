@@ -37,6 +37,10 @@ export default function Pagination({ recentData }: PaginationProps) {
   const next = lastNum + 1;
   const prev = firstNum - 1;
 
+  if (recentData.length === 0) {
+    return <p>No data is available</p>;
+  }
+
   return (
     <>
       <table className={styles.recentTable}>
