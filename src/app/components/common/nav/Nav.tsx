@@ -26,6 +26,9 @@ export default function Nav() {
         <li className={styles.navItem}>
           <Link href="/chart">Chart</Link>
         </li>
+        <li className={styles.navItem}>
+          <Link href="/report">Report</Link>
+        </li>
       </ul>
       <LogoutButton />
     </nav>
