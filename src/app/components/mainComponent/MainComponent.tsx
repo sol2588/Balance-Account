@@ -10,7 +10,7 @@ export default function MainComponent() {
         <h3 className={styles.mainTitle}>Overview</h3>
         <section className={styles.mainContents}>
           <AccountInfoComponent />
-          <aside className={styles.sideMenu}></aside>
+          {/* <aside className={styles.sideMenu}></aside> */}
         </section>
       </main>
     </>

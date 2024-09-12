@@ -7,23 +7,42 @@
   text-align: start;
   margin-bottom: 0;
 }
+.reportContents {
+  display: flex;
+  gap: 43px;
+}
 .btnWrapper {
-  margin-bottom: 32px;
+  margin: 32px 0;
 }
-.reportDesc {
-  font-size: 16px;
-  font-weight: 400;
-}
+
 .selectBtn {
-  font-size: 20px;
+  font-size: 16px;
   padding: 10px 20px;
   margin-right: 20px;
-  border: none;
+  border: 1px solid #626b96;
   border-radius: 8px;
-  background-color: #f9b179;
+  background-color: inherit;
   cursor: pointer;
+  color: #fff;
+  transition: background-color 0.3s, color 0.3s;
 }
-.reportContents {
+.selectBtn:hover {
+  background-color: #626b96;
+  border-color: #f9b179;
+}
+
+.active {
+  background-color: #f9b179;
+  color: #fff;
+  border-color: #f9b179;
+  font-weight: bold;
+}
+
+.active:hover {
+  background-color: #f9b179;
+  border-color: #f9b179;
+}
+.pagination {
   margin: 20px 0;
 }
 .recentTable {
@@ -49,19 +68,34 @@
 }
 
 .clickPeroidBtn {
-  width: 75px;
+  width: 100px;
   padding: 10px 20px;
   margin-right: 20px;
-  border: none;
+  border: 1px solid #626b96;
   border-radius: 20px;
-  background-color: #1f9cf0;
+  background-color: inherit;
   cursor: pointer;
+  color: #fff;
+  transition: background-color 0.3s, color 0.3s;
+}
+.clickPeroidBtn:hover {
+  background-color: #626b96;
+  border-color: #f9b179;
+}
+.periodActive {
+  background-color: #f9b179;
+  color: #fff;
+  border-color: #f9b179;
+  font-weight: bold;
+}
+.periodActive:hover {
+  background-color: #f9b179;
+  border-color: #f9b179;
 }
 .periodInput {
   font-size: 16px;
-  min-width: 300px;
-  height: 50px;
   margin: 20px 0;
+  height: 40px;
   outline: none;
   border: none;
   border-radius: 8px;
@@ -77,4 +111,29 @@
   clip: rect(0, 0, 0, 0);
   overflow: hidden;
   white-space: nowrap;
+}
+.reportResult {
+  margin-top: 100px;
+  padding: 20px;
+  min-width: 25%;
+  height: 90%;
+  border: 1px solid #626b96;
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.reportResultTotal {
+  margin: 32px;
+  display: block;
+  font-weight: 700;
+  font-size: 20px;
+}
+.reportValue {
+  margin-top: 44px;
+  font-size: 20px;
+  font-weight: 500;
+  display: block;
+  /* align-self: flex-end; */
 }

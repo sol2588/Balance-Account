@@ -26,13 +26,14 @@ interface FetchDataProps {
 }
 
 export default function ReportComponent() {
+  const [activeBtn, setActiveBtn] = useState<string>("peroid");
   const [purposeBtn, setPurposeBtn] = useState<boolean>(false);
+  const [periodBtn, setPeroidBtn] = useState<string>("full");
   const [message, setMessage] = useState<string>("");
   const [originData, setOriginData] = useState<RecentProps[]>([]);
   const [recentData, setRecentData] = useState<RecentProps[]>([]);
   const [startDate, setStartDate] = useState<string | undefined>();
   const [endDate, setEndDate] = useState<string | undefined>();
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -98,75 +99,108 @@ export default function ReportComponent() {
     { label: "1년", value: "year1" },
   ];
 
+  const totalSendMoney = recentData
+    .reduce((acc, cur) => {
+      const amount = parseInt(cur.sendMoney.replace(",", ""));
+      return acc + (isNaN(amount) ? 0 : amount);
+    }, 0)
+    .toLocaleString("ko-KR");
+
   return (
     <section className={styles.reportContainer}>
       <header>
         <h3 className={styles.reportHeader}>Report</h3>
       </header>
-      <div role="buttonWrapper" className={styles.btnWrapper}>
-        <h5 className={styles.reportDesc}>검색필터</h5>
-        <button type="button" className={styles.selectBtn} onClick={() => setPurposeBtn(false)}>
-          기간별
-        </button>
-        <button type="button" className={styles.selectBtn} onClick={() => setPurposeBtn(true)}>
-          목록별
-        </button>
-
-        {purposeBtn ? (
-          <div className={styles.purposeWrapper}>
-            <button value="transaction">거래</button>
-            <button value="trading">주식</button>
-            <button value="eat">식비</button>
-            <button value="lesuire">여가</button>
-            <button value="etc">기타</button>
-          </div>
-        ) : (
-          <div className={styles.periodWrapper}>
-            <div className={styles.datePick}>
-              <label className={styles.visuallyHidden} htmlFor="startDate">
-                시작날짜
-              </label>
-              <input
-                className={styles.periodInput}
-                type="text"
-                id="startDate"
-                value={startDate}
-                placeholder="시작날짜"
-              />
-              <span className={styles.space}>~</span>
-              <label className={styles.visuallyHidden} htmlFor="endDate">
-                종료날짜
-              </label>
-              <input className={styles.periodInput} type="text" id="endDate" value={endDate} placeholder="종료날짜" />
-            </div>
-            <div className={styles.peroidBtnWrapper}>
-              {periodOptions.map(option => (
-                <button
-                  className={styles.clickPeroidBtn}
-                  key={option.value}
-                  value={option.value}
-                  onClick={handleClickMonth}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-      <div>기간</div>
       <div className={styles.reportContents}>
-        <Pagination recentData={recentData} />
+        <div className={styles.reportList}>
+          <div role="buttonWrapper" className={styles.btnWrapper}>
+            <button
+              type="button"
+              value="period"
+              className={[styles.selectBtn, activeBtn == "peroid" ? styles.active : ""].join(" ")}
+              onClick={() => {
+                setPurposeBtn(false);
+                setActiveBtn("peroid");
+              }}
+            >
+              기간별
+            </button>
+            <button
+              type="button"
+              value="purpose"
+              className={[styles.selectBtn, activeBtn == "purpose" ? styles.active : ""].join(" ")}
+              onClick={() => {
+                setPurposeBtn(true);
+                setActiveBtn("purpose");
+              }}
+            >
+              목록별
+            </button>
 
+            {purposeBtn ? (
+              <div className={styles.purposeWrapper}>
+                <button value="transaction">거래</button>
+                <button value="trading">주식</button>
+                <button value="eat">식비</button>
+                <button value="lesuire">여가</button>
+                <button value="etc">기타</button>
+              </div>
+            ) : (
+              <div className={styles.periodWrapper}>
+                <div className={styles.datePick}>
+                  <label className={styles.visuallyHidden} htmlFor="startDate">
+                    시작날짜
+                  </label>
+                  <input
+                    className={styles.periodInput}
+                    type="text"
+                    id="startDate"
+                    value={startDate}
+                    placeholder="시작날짜"
+                  />
+                  <span className={styles.space}>~</span>
+                  <label className={styles.visuallyHidden} htmlFor="endDate">
+                    종료날짜
+                  </label>
+                  <input
+                    className={styles.periodInput}
+                    type="text"
+                    id="endDate"
+                    value={endDate}
+                    placeholder="종료날짜"
+                  />
+                </div>
+                <div className={styles.peroidBtnWrapper}>
+                  {periodOptions.map(option => (
+                    <button
+                      className={[styles.clickPeroidBtn, periodBtn == option.value ? styles.periodActive : ""].join(
+                        " ",
+                      )}
+                      key={option.value}
+                      value={option.value}
+                      onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                        handleClickMonth(e);
+                        const { value } = e.target as HTMLButtonElement;
+                        setPeroidBtn(value);
+                      }}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          <div className={styles.pagination}>
+            <Pagination recentData={recentData} />
+          </div>
+        </div>
         <div className={styles.reportResult}>
           <div className={styles.reportTitle}>
-            {startDate}부터 {endDate} 지출 총금액
+            <span className={styles.reportResultTotal}>지출 총금액</span>
           </div>
-          <div className={styles.reportValue}>
-            {recentData.reduce((acc, cur) => {
-              return (acc += parseInt(cur.sendMoney.replace(",", "")));
-            }, 0)}
-          </div>
+          <span>{startDate ? `${startDate}부터${endDate} 기간 동안` : "전체기간 동안"}</span>
+          <span className={styles.reportValue}>{totalSendMoney}원</span>
         </div>
       </div>
     </section>

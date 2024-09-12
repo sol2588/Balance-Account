@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, MouseEvent } from "react";
 import styles from "./PaginationComponent.module.css";
 
 const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25];
@@ -21,7 +21,7 @@ interface PaginationProps {
 }
 
 export default function Pagination({ recentData }: PaginationProps) {
-  console.log(recentData);
+  const [btnActive, setBtnActive] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const totalData = items.length; // 총 데이터
   const limitData = 4; // 한페이지에 보여줄 데이터의 개수
@@ -36,7 +36,7 @@ export default function Pagination({ recentData }: PaginationProps) {
 
   const next = lastNum + 1;
   const prev = firstNum - 1;
-  console.log(currentPage);
+
   return (
     <>
       <table className={styles.recentTable}>
@@ -62,17 +62,37 @@ export default function Pagination({ recentData }: PaginationProps) {
         </tbody>
       </table>
 
-      {pageGroup > 1 && <button onClick={() => setCurrentPage(prev)}>&lt</button>}
-      {Array(pageCount)
-        .fill(firstNum)
-        .map((_, i) => {
-          return (
-            <button key={i} onClick={() => setCurrentPage(firstNum + i)}>
-              {firstNum + i}
-            </button>
-          );
-        })}
-      {totalGroup > pageGroup && <button onClick={() => setCurrentPage(next)}>&gt</button>}
+      <div className={styles.buttonGroup}>
+        {pageGroup > 1 && (
+          <button type="button" className={styles.numberBtn} onClick={() => setCurrentPage(prev)}>
+            {" "}
+            {"<"}{" "}
+          </button>
+        )}
+        {Array(pageCount)
+          .fill(firstNum)
+          .map((_, i) => {
+            return (
+              <button
+                type="button"
+                value={i}
+                className={[styles.numberBtn, i == btnActive ? styles.active : ""].join(" ")}
+                key={i}
+                onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                  setCurrentPage(firstNum + i);
+                  setBtnActive(i);
+                }}
+              >
+                {firstNum + i}
+              </button>
+            );
+          })}
+        {totalGroup > pageGroup && (
+          <button type="button" className={styles.numberBtn} onClick={() => setCurrentPage(next)}>
+            {">"}
+          </button>
+        )}
+      </div>
     </>
   );
 }

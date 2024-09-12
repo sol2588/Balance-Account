@@ -5,7 +5,6 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { cookies } from "next/headers";
 
 export async function GET(req: NextRequest) {
-  console.log("???");
   if (req.method == "GET") {
     try {
       const cookieStore = cookies();
@@ -22,7 +21,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ message: "최근 거래내역이 존재하지 않습니다." }, { status: 200 });
       }
       const recentTransaction = recentSnapshot.docs.map(doc => doc.data());
-      console.log(recentTransaction);
+      // console.log(recentTransaction);
       return NextResponse.json({ recentTransaction }, { status: 200 });
     } catch (err) {
       return NextResponse.json({ message: "Server error" }, { status: 500 });
