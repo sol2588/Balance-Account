@@ -121,7 +121,7 @@ export default function LoginComponent() {
         간편로그인 하기
       </button>
 
-      <button type="button" className={styles.googleBtn} onClick={googleLogin}>
+      <button type="button" className={styles.googleBtn} onClick={() => googleLogin()}>
         <img src="/web_light_sq_SU@2x.png" alt="Sign in with Google" />
       </button>
 

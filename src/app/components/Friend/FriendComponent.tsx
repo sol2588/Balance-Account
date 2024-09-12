@@ -58,13 +58,14 @@ export default function FriendComponent() {
       const response = await axios.post("/api/friends", { checkList });
       if (response.status == 200) {
         setFriends(prev => [...prev, response.data.friendsAccountInfo]);
-        dispatch(modalOpen({ isOpen: true, title: "친구가 추가되었습니다." }));
+        dispatch(modalOpen({ title: "친구가 추가되었습니다." }));
+        window.location.reload();
       } else {
-        dispatch(modalOpen({ isOpen: true, title: "친구 추가 실패, 다시 시도하시기 바랍니다." }));
+        dispatch(modalOpen({ title: "친구 추가 실패, 다시 시도하시기 바랍니다." }));
       }
     } catch (err: any) {
       console.log(err);
-      dispatch(modalOpen({ isOpen: true, title: err.response.data.message }));
+      dispatch(modalOpen({ title: err.response.data.message }));
     }
   };
 
