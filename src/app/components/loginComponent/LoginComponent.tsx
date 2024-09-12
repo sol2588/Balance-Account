@@ -22,28 +22,6 @@ export default function LoginComponent() {
   const [userId, setUserId] = useState("");
   const [pw, setPw] = useState("");
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post("/api/login", { userId, pw });
-      if (response.status == 200) {
-        dispatch(setLoginSuccess({ id: userId, token: response.data.token, name: response.data.name }));
-        // access token은 sessionStorage 저장하고 refresh는 HttpOnly로 클라이언트 JS로는 접근하여 확인 불가
-        // session Storage - cookie 탭에 담겨있고 클라이언트에서 request보낼때 자동으로 http의 모든 내용을 포함함
-        if (response.data.pinExist) {
-          router.push("/main");
-        } else {
-          router.push("/login/success");
-        }
-      } else {
-        console.log(response.status);
-      }
-    } catch (error: unknown) {
-      const err = error as ErrorType;
-      setMessage(err.response?.data?.message || "Unknown error");
-    }
-  };
-
   const googleLogin = useGoogleLogin({
     scope: "email profile",
     onSuccess: async authCode => {
@@ -78,6 +56,28 @@ export default function LoginComponent() {
     flow: "auth-code",
     redirect_uri: "postmessage",
   });
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("/api/login", { userId, pw });
+      if (response.status == 200) {
+        dispatch(setLoginSuccess({ id: userId, token: response.data.token, name: response.data.name }));
+        // access token은 sessionStorage 저장하고 refresh는 HttpOnly로 클라이언트 JS로는 접근하여 확인 불가
+        // session Storage - cookie 탭에 담겨있고 클라이언트에서 request보낼때 자동으로 http의 모든 내용을 포함함
+        if (response.data.pinExist) {
+          router.push("/main");
+        } else {
+          router.push("/login/success");
+        }
+      } else {
+        console.log(response.status);
+      }
+    } catch (error: unknown) {
+      const err = error as ErrorType;
+      setMessage(err.response?.data?.message || "Unknown error");
+    }
+  };
 
   return (
     <section className={styles.loginContainer}>

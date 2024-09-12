@@ -148,7 +148,7 @@ export default function SignupComponent() {
           가입하기
         </button>
 
-        <button className={styles.googleBtn} onClick={googleSignup}>
+        <button className={styles.googleBtn} onClick={() => googleSignup()}>
           <img src="/web_light_sq_SU@2x.png" alt="google_login" />
         </button>
       </form>
