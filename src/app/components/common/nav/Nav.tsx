@@ -8,7 +8,7 @@ export default function Nav() {
   return (
     <nav className={styles.navContainer}>
       <header>
-        <h1>Balance Account</h1>
+        <h1 className={styles.title}>Balance Account</h1>
       </header>
       <ul className={styles.navList}>
         <li className={styles.navItem}>
