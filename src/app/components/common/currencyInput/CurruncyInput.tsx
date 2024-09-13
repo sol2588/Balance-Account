@@ -1,6 +1,6 @@
 "use client";
 
-import { MouseEvent, ChangeEvent } from "react";
+import { useState, MouseEvent, ChangeEvent } from "react";
 import styles from "./CurrencyInput.module.css";
 
 interface setFunction {
@@ -11,6 +11,7 @@ interface setFunction {
 }
 
 export default function CurrencyInput({ setMoney, value, setMessage, title }: setFunction) {
+  const [active, setActive] = useState<string>("");
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     let strToNum = Number(value.replaceAll(",", ""));
@@ -32,7 +33,17 @@ export default function CurrencyInput({ setMoney, value, setMessage, title }: se
       }
       return clickedMoney.toLocaleString("ko-KR");
     });
+    const { innerText } = e.target as HTMLButtonElement;
+    setActive(innerText);
   };
+
+  const moneyVariation = [
+    { value: 5000, text: "5천" },
+    { value: 10000, text: "1만" },
+    { value: 50000, text: "5만" },
+    { value: 100000, text: "10만" },
+    { value: 1000000, text: "100만" },
+  ];
 
   return (
     <>
@@ -48,21 +59,18 @@ export default function CurrencyInput({ setMoney, value, setMessage, title }: se
         placeholder={`${title} 금액을 입력해주세요`}
       />
       <div role="group">
-        <button className={styles.button} name="amount" value="5000" onClick={handleClickMoney}>
-          5천
-        </button>
-        <button className={styles.button} name="amount" value="10000" onClick={handleClickMoney}>
-          1만
-        </button>
-        <button className={styles.button} name="amount" value="50000" onClick={handleClickMoney}>
-          5만
-        </button>
-        <button className={styles.button} name="amount" value="100000" onClick={handleClickMoney}>
-          10만
-        </button>
-        <button className={styles.button} name="amount" value="1000000" onClick={handleClickMoney}>
-          100만
-        </button>
+        {moneyVariation.map(money => (
+          <button
+            key={money.value}
+            type="button"
+            className={[styles.button, active == money.text ? styles.active : ""].join(" ")}
+            name="amount"
+            value={money.value}
+            onClick={handleClickMoney}
+          >
+            {money.text}
+          </button>
+        ))}
       </div>
     </>
   );

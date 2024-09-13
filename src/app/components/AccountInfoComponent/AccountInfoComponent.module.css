@@ -31,14 +31,20 @@
 }
 .btn {
   font-size: 20px;
+  font-weight: 700;
+  padding: 10px 20px;
   width: 100px;
-  height: 30px;
-  border: none;
+  height: 50px;
+  border: 1px solid;
   border-radius: 8px;
-  background-color: #f9b179;
+  background-color: inherit;
+  color: #f9b179;
   cursor: pointer;
 }
-
+.btn:hover {
+  border: 1px solid #f9b179;
+  background-color: #626b96;
+}
 .accountLink {
   text-decoration: none;
   color: inherit;

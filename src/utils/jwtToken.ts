@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 const privateKey = process.env.PRIVATE_KEY || "jwt-private-key";
-const publicKey = process.env.PUBLIC_KEY || "jwt-public-key";
+const publicKey = process.env.TOKEN_PUBLIC_KEY || "jwt-public-key";
 
 // access token(비밀키로 서명)
 export function generateAccess(id: string) {

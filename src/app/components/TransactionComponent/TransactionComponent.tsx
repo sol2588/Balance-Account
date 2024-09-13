@@ -73,7 +73,11 @@ export default function TransActionComponent() {
   const handleReceiverAccount = async () => {
     try {
       const extractAccount = receiverAccount?.replaceAll("-", "");
-      const response = await axios.post("/api/transaction", { extractAccount, bankSelected, action: "checkAccount" });
+      const response = await axios.post("/api/transaction", {
+        extractAccount,
+        bankSelected,
+        action: "checkAccount",
+      });
       if (response.status == 200) {
         const { targetUser, targetAccount, targetBank, targetAmount, targetStatus, message } = response.data;
         setConfirmMessage(`${targetStatus}번째 거래입니다.`);
@@ -188,7 +192,7 @@ export default function TransActionComponent() {
                 {BUTTON_TYPES.map((btn, idx) => (
                   <button
                     key={`${idx}_${btn}`}
-                    className={styles.purposeBtn}
+                    className={[styles.purposeBtn, purpose == btn ? styles.active : ""].join(" ")}
                     onClick={(e: MouseEvent<HTMLButtonElement>) => {
                       const { innerText } = e.target as HTMLButtonElement;
                       setPurpose(innerText);

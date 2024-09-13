@@ -70,6 +70,10 @@
   background-color: #f9b179;
   cursor: pointer;
 }
+.submitBtn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
 
 .targetWrapper {
   margin-top: 30px;
@@ -134,12 +138,22 @@
   padding: 10px 12px;
   font-size: 16px;
   line-height: 1rem;
-  border: none;
+  border: 1px solid #141d2f;
   border-radius: 8px;
-  background-color: #f9b179;
+  background-color: inherit;
+  color: #fff;
   cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
 }
-
+.purposeBtn:hover {
+  background-color: #626b96;
+  border-color: #f9b179;
+}
+.active {
+  background-color: #f9b179;
+  border-color: #f9b179;
+  font-weight: bold;
+}
 .chooseBtnWrapper {
   max-width: 1000px;
   display: flex;

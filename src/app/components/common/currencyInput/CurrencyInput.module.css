@@ -15,12 +15,21 @@
   width: 70px;
   margin: 0 10px 20px 0;
   padding: 10px 0;
-  border: none;
+  border: 1px solid #141d2f;
   border-radius: 2rem;
-  color: #fff;
-  background-color: #626b96;
-  box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+  background-color: inherit;
   cursor: pointer;
+  color: #fff;
+  transition: background-color 0.3s, color 0.3s;
+}
+.button:hover {
+  background-color: #626b96;
+  border-color: #f9b179;
+}
+.active {
+  background-color: #f9b179;
+  border-color: #f9b179;
+  font-weight: bold;
 }
 .visuallyHidden {
   position: absolute;
