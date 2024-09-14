@@ -16,7 +16,7 @@ const initialState: ModalProps = {
   title: "",
 };
 
-export default function modalReducer(state = initialState, action: ModalAction): ModalProps {
+export default function modalReducer(state = initialState, action: any): ModalProps {
   switch (action.type) {
     case "IS_OPEN":
       return {
