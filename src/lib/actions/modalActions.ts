@@ -1,4 +1,4 @@
-export const modalOpen = (modalData: any) => ({
+export const modalOpen = (modalData: Record<string, string>) => ({
   type: "IS_OPEN",
   payload: {
     isOpen: true,

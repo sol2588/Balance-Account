@@ -32,9 +32,9 @@ export default function TransActionComponent() {
   const accountState = useSelector((state: RootState) => state.account);
 
   // ! transaction 새로고침하면 login 풀리는 현상 있음 + authCheck확인
-  const [accountInfo, setAccountInfo] = useState<AccountProps>();
-  const [bankSelected, setBankSelected] = useState<string>();
-  const [receiverAccount, setReceiverAccount] = useState<string>();
+  // const [accountInfo, setAccountInfo] = useState<AccountProps>({account: accountState.account, balance: accountState.balance});
+  const [bankSelected, setBankSelected] = useState<string>("");
+  const [receiverAccount, setReceiverAccount] = useState<string>("");
   const [receiverData, setReceiverData] = useState<TargetInfoProps>({
     receiver: "",
     account: "",
@@ -49,14 +49,8 @@ export default function TransActionComponent() {
   const [notAllowedMessage, setNotAllowedMessage] = useState<string>();
   const [transferResult, setTransferResult] = useState<string>("");
 
-  // 계좌 정보 가져오기(redux)
-  useEffect(() => {
-    setAccountInfo({ account: accountState.account, balance: accountState.balance } || {});
-  }, []);
-
-  useEffect(() => {
-    dispatch(modalOpen({ title: "첫번째 거래입니다. 한번 더 확인 후 송금하시기 바랍니다." }));
-  }, [receiverData.transferStatus]);
+  // 계좌 정보 저장(redux)
+  const accountInfo = { account: accountState.account, balance: accountState.balance };
 
   useEffect(() => {
     const requiredAmount = Number(money?.replaceAll(",", ""));
@@ -80,7 +74,6 @@ export default function TransActionComponent() {
       });
       if (response.status == 200) {
         const { targetUser, targetAccount, targetBank, targetAmount, targetStatus, message } = response.data;
-        setConfirmMessage(`${targetStatus}번째 거래입니다.`);
         setReceiverData({
           ...receiverData,
           receiver: targetUser,
@@ -89,10 +82,15 @@ export default function TransActionComponent() {
           transferAmount: targetAmount,
           transferStatus: targetStatus,
         });
+        setConfirmMessage(`${targetStatus}번째 거래입니다.`);
+
+        if (targetStatus == 0) {
+          dispatch(modalOpen({ title: "첫번째 거래입니다. 한번 더 확인 후 송금하시기 바랍니다." }));
+        }
       }
     } catch (err: any) {
       if (err.response) {
-        setAccountMessage(err.response.data.message);
+        setAccountMessage(err.response.data.message || "계좌 정보를 확인할 수 없습니다.");
       }
     }
   };
@@ -103,7 +101,6 @@ export default function TransActionComponent() {
       if (response.status == 200) {
         const { account, balance } = response.data.responseData;
         dispatch(setAccountCharge(balance));
-        setAccountInfo({ account: account, balance: balance });
         setTransferResult("success");
       }
     } catch (err) {
