@@ -3,6 +3,7 @@ import { db } from "@/utils/database";
 import { collection, doc, getDocs, query, setDoc, getDoc, where, limit, orderBy } from "firebase/firestore";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { compareSync } from "bcrypt";
 
 export async function GET(req: NextRequest) {
   if (req.method == "GET") {
@@ -68,32 +69,29 @@ export async function POST(req: NextRequest) {
       const { userId } = decoded as JwtPayload;
 
       const { checkList } = await req.json();
-      // checkList에 담긴 계좌가 accountsInfo 존재하는지 check하고 data 담기
-      // ! 리팩토링
+      // client에서 받은 계좌정보 -> client에서 보낸 계좌정보는 db accountInfo에 데이터
       if (checkList && checkList.length > 0) {
-        const recentQuery = query(collection(db, "accountsInfo"), where("account", "in", checkList));
-        const recentSnapshot = await getDocs(recentQuery);
-        const accountForFriends = recentSnapshot.docs.map(doc => doc.data());
-
-        for (const account of accountForFriends) {
-          const friendRef = doc(collection(db, "users", `user_${userId}`, "friends"), `friends_${account.account}`);
-          await setDoc(friendRef, account);
-        }
-
         // 기존 친구 목록 가져오기
         const friendQuery = query(collection(db, "users", `user_${userId}`, "friends"));
         const friendSnapshot = await getDocs(friendQuery);
-        const friendsData = friendSnapshot.docs.map(doc => doc.data().account);
-        console.log(friendsData);
-        for (const friend of friendsData) {
-          if (checkList.includes(friend)) {
-            return NextResponse.json({ message: "이미 존재하는 친구입니다." }, { status: 400 });
-          } else {
-            return NextResponse.json({ accountForFriends }, { status: 200 });
+        const friendsData = friendSnapshot.docs.map(doc => doc.data());
+
+        // 기존친구 목록과 비교
+        const compareAcc = checkList.filter(
+          (checked: Record<string, string>) => !friendsData.some(friend => friend.account == checked.account),
+        );
+
+        if (compareAcc.length == 0) {
+          return NextResponse.json({ message: "이미 존재하는 친구입니다." }, { status: 400 });
+        } else {
+          for (const target of compareAcc) {
+            const friendRef = doc(collection(db, "users", `user_${userId}`, "friends"), `friends_${target.account}`);
+            await setDoc(friendRef, target);
           }
+          return NextResponse.json({ compareAcc }, { status: 200 });
         }
       } else {
-        return NextResponse.json({ message: "No accounts provided" }, { status: 400 });
+        return NextResponse.json({ message: "계좌를 선택하여주시기 바랍니다." }, { status: 400 });
       }
     } catch (err) {
       return NextResponse.json({ message: "Server Error" }, { status: 500 });

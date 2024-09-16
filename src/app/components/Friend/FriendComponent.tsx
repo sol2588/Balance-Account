@@ -29,7 +29,7 @@ export default function FriendComponent() {
   const modalSelector = useSelector((state: RootState) => state.modal.isOpen);
   const [recentData, setRecentData] = useState<RecentProps[]>([]);
   const [friends, setFriends] = useState<FriendsProps[]>([]);
-  const [checkList, setCheckList] = useState<string[]>([]);
+  const [checkList, setCheckList] = useState<FriendsProps[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,20 +46,20 @@ export default function FriendComponent() {
     fetchData();
   }, []);
 
-  const handleCheck = (e: ChangeEvent<HTMLInputElement>, value: string) => {
+  const handleCheck = (e: ChangeEvent<HTMLInputElement>, value: FriendsProps) => {
     if (e.target.checked) {
       setCheckList(prev => [...prev, value]);
     } else {
-      setCheckList(prev => prev.filter(item => item != value));
+      setCheckList(prev => prev.filter(item => item.account != value.account));
     }
   };
+
   const handleSubmit = async () => {
     try {
       const response = await axios.post("/api/friends", { checkList });
       if (response.status == 200) {
-        setFriends(prev => [...prev, response.data.friendsAccountInfo]);
+        setFriends(prev => [...prev, ...response.data.compareAcc]);
         dispatch(modalOpen({ title: "친구가 추가되었습니다." }));
-        window.location.reload();
       } else {
         dispatch(modalOpen({ title: "친구 추가 실패, 다시 시도하시기 바랍니다." }));
       }
@@ -68,6 +68,7 @@ export default function FriendComponent() {
       dispatch(modalOpen({ title: err.response.data.message }));
     }
   };
+  console.log(friends);
 
   return (
     <section className={styles.friendsContainer}>
@@ -96,8 +97,8 @@ export default function FriendComponent() {
                         <input
                           type="checkbox"
                           id={`${item.idx}`}
-                          checked={checkList.includes(item.account)}
-                          onChange={e => handleCheck(e, item.account)}
+                          checked={checkList.some(checked => checked.account == item.account)}
+                          onChange={e => handleCheck(e, { account: item.account, owner: item.name, bank: item.bank })}
                         />
                       </td>
                       <td>{item.name}</td>

@@ -45,6 +45,10 @@
   background-color: #f9b179;
   cursor: pointer;
 }
+.submitBtn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
 
 .freindsList {
   margin-top: 20px;
