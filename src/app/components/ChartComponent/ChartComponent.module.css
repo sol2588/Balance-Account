@@ -18,7 +18,7 @@
   margin-right: 20px;
   border: none;
   border-radius: 8px;
-  background-color: #f9b179;
+  background-color: #9aa596;
   cursor: pointer;
 }
 .chooseMonthBtn {
@@ -26,15 +26,21 @@
   margin-right: 20px;
   border: none;
   border-radius: 8px;
-  background-color: #f9b179;
+  background-color: #9aa596;
   cursor: pointer;
+}
+.selectYearBtn:hover,
+.chooseMonthBtn:hover {
+  color: #fff;
+  background-color: #6a7a65;
+  transition: background-color 1s ease;
 }
 .selectMonthBtn {
   padding: 10px 20px;
   margin-right: 20px;
   border: none;
   border-radius: 8px;
-  background-color: #e254cd;
+  background-color: #ffacb8;
   cursor: pointer;
 }
 .selectMonthBtn:disabled {

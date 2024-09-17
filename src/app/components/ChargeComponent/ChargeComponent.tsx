@@ -78,7 +78,7 @@ export default function ChargeComponent() {
             충전하기
           </button>
           <button type="button" className={styles.mainBtn} onClick={handleClickToMain}>
-            메인 페이지로 돌아가기
+            메인 페이지가기
           </button>
         </div>
       </div>
@@ -88,6 +88,7 @@ export default function ChargeComponent() {
           <span className={styles.chargeResultDesc}>
             {confirmCharge}원 {chargeMessage}
           </span>
+          <span className={styles.chargeTotalAmount}>충전 후 금액은 {balance}원 입니다.</span>
         </div>
       )}
     </section>

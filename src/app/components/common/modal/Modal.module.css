@@ -9,17 +9,16 @@
 
 .modalBody {
   width: auto;
-  height: 100px;
   padding: 30px;
   font-size: 20px;
-  border-radius: 8px;
+  background-color: rgb(241, 228, 228);
   border: 2px solid black;
+  border-radius: 8px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 99;
-  background-color: rgb(211, 206, 206);
 }
 .modalTitle {
   color: rgb(10, 9, 10);
@@ -27,8 +26,10 @@
 .chkBtn {
   font-size: 16px;
   width: 50px;
-  height: 25px;
+  height: 40px;
   border: none;
-  background-color: #f9b179;
+  border-radius: 8px;
+  color: #fff;
+  background-color: #6a7a65;
   cursor: pointer;
 }

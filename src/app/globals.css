@@ -3,14 +3,13 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  width: 100%;
-  /* overflow: hidden; */
 }
 
 body {
+  margin: 0 auto;
+  width: 90%;
   height: 100vh;
-  color: #fff;
-  background: #141d2f;
-  display: grid;
-  grid-template-columns: 20% 80%;
+  color: #2f2f2f;
+  background: #fffaf6;
+  box-sizing: border-box;
 }

@@ -109,13 +109,16 @@ export default function LoginComponent() {
             id="pw"
             name="pw"
             value={pw}
-            onChange={e => setPw(e.target.value)}
+            onChange={e => {
+              setPw(e.target.value);
+              setMessage("");
+            }}
           />
         </fieldset>
-        <button className={styles.submitBtn} type="submit" disabled={!userId || !pw}>
+        {message && <span className={styles.inputMsg}>{message}</span>}
+        <button className={styles.submitBtn} type="submit" disabled={!userId || !pw || message.length != 0}>
           Login
         </button>
-        {message && <span>{message}</span>}
       </form>
       <button className={styles.pinLoginBtn} onClick={() => router.push("/pin/login")}>
         간편로그인 하기

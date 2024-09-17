@@ -34,33 +34,33 @@ const BarChart: React.FC<{ data: { labels: string[]; datasets: Dataset[] } }> = 
     scales: {
       x: {
         grid: {
-          color: "#fff",
+          color: "#2f2f2f",
           display: true,
         },
         ticks: {
-          color: "#fff",
+          color: "#2f2f2f",
           padding: 4,
         },
         title: {
           display: true,
           text: "월",
-          color: "#fff",
+          color: "#2f2f2f",
           size: 20,
         },
       },
       y: {
         grid: {
-          color: "#fff",
+          color: "#2f2f2f",
         },
         ticks: {
-          color: "#fff",
+          color: "#2f2f2f",
           min: 0,
           max: 200,
         },
         title: {
           display: true,
           text: "금액",
-          color: "#fff",
+          color: "#2f2f2f",
         },
       },
     },
@@ -69,7 +69,7 @@ const BarChart: React.FC<{ data: { labels: string[]; datasets: Dataset[] } }> = 
       legend: {
         position: "bottom" as const,
         labels: {
-          color: "#fff", // 범례 텍스트 색상
+          color: "#2f2f2f", // 범례 텍스트 색상
           font: {
             size: 20,
           },
@@ -78,7 +78,7 @@ const BarChart: React.FC<{ data: { labels: string[]; datasets: Dataset[] } }> = 
       title: {
         display: true,
         text: "지출 차트",
-        color: "#fff",
+        color: "#2f2f2f",
         font: {
           size: 20,
         },

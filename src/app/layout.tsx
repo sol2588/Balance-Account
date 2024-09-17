@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "@/lib/store/store";
 import AuthCheck from "@/app/authCheck/AuthCheck";
-import Nav from "./components/common/nav/Nav";
+import Navigation from "./components/common/nav/Navigation";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -16,7 +16,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <GoogleOAuthProvider clientId={`${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}`}>
             <body>
               <AuthCheck />
-              <Nav />
+              <Navigation />
               {children}
             </body>
           </GoogleOAuthProvider>

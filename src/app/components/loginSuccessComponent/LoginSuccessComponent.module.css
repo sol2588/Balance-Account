@@ -1,14 +1,14 @@
 .successContainer {
   padding: 40px;
-  text-align: start;
+  text-align: center;
 }
 .successHeader {
   font-size: 44px;
-  text-align: start;
+  font-weight: 700;
   margin-bottom: 0;
 }
 .successMsg {
-  font-weight: 500;
+  font-weight: 600;
   font-size: 28px;
 }
 .pinDesc {
@@ -18,9 +18,15 @@
   display: block;
   width: 450px;
   height: 50px;
-  margin: 32px 0;
-  background-color: #f9b179;
+  margin: 32px auto;
+  font-weight: 600;
+  color: #fff;
+  background-color: #9aa596;
   border: 0;
   border-radius: 8px;
   cursor: pointer;
+}
+.commonBtn:hover {
+  background-color: #6a7a65;
+  transition: background-color 1s ease;
 }

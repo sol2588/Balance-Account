@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLogoutSuccess } from "@/lib/actions/userActions";
 import { setAccountLogout } from "@/lib/actions/accountActions";
 import { RootState } from "@/lib/reducer";
+import { FiLogOut } from "react-icons/fi";
+import styles from "./LogoutButton.module.css";
 
 export default function LogoutButton() {
   const dispatch = useDispatch();
@@ -28,23 +30,8 @@ export default function LogoutButton() {
   return (
     <>
       {isLoggedIn && (
-        <button
-          style={{
-            width: "100px",
-            height: "20px",
-            display: "inline-block",
-            backgroundColor: "inherit",
-            border: "1px solid #f9b179",
-            borderRadius: "8px",
-            color: "#fff",
-            fontSize: "16px",
-            margin: 0,
-            padding: "10px 20px 30px",
-            cursor: "pointer",
-          }}
-          onClick={handleLogout}
-        >
-          Logout
+        <button className={styles.button} onClick={handleLogout}>
+          <FiLogOut />
         </button>
       )}
     </>

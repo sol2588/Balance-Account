@@ -14,3 +14,9 @@
   border: 1px solid #626b96;
   border-radius: 10px;
 }
+
+@media screen and (max-width: 769px) {
+  .mainTitle {
+    font-size: 36px;
+  }
+}

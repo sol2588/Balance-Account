@@ -224,9 +224,10 @@ export default function TransActionComponent() {
       {/* 송금 결과 확인 창 */}
       {transferResult && (
         <div className={styles.transferResultWrapper}>
-          <p className={styles.transferResult}>
+          <span className={styles.transferResult}>
             {receiverData.receiver}님께 {money}을 보냈습니다.
-          </p>
+          </span>
+          <span className={styles.transferResultBalance}>이체 후 잔액은 {accountInfo?.balance}원 입니다.</span>
         </div>
       )}
     </section>

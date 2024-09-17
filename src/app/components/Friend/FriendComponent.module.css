@@ -8,8 +8,8 @@
 }
 .recentHistory {
   padding: 30px;
+  border: 3px solid #6a7a65;
   border-radius: 16px;
-  background-color: #3f4364;
 }
 .recentTitle {
   margin-bottom: 10px;
@@ -25,8 +25,10 @@
 }
 .recentTable th {
   font-weight: 600;
-  border-bottom: 1px solid #ddd;
-  background-color: #626b96;
+  border: 3px solid #6a7a65;
+  border-bottom: 1px solid #9aa596;
+  color: #fff;
+  background-color: #6a7a65;
   padding: 10px 5px;
   text-align: left;
 }
@@ -42,8 +44,12 @@
   line-height: 1rem;
   border: none;
   border-radius: 8px;
-  background-color: #f9b179;
+  background-color: #9aa596;
   cursor: pointer;
+}
+.submitBtn:hover {
+  background-color: #6a7a65;
+  transition: background-color 1s ease;
 }
 .submitBtn:disabled {
   background-color: #cccccc;
@@ -53,8 +59,8 @@
 .freindsList {
   margin-top: 20px;
   padding: 30px;
+  border: 3px solid #6a7a65;
   border-radius: 16px;
-  background-color: #3f4364;
 }
 .friendsListTitile {
   margin-bottom: 10px;

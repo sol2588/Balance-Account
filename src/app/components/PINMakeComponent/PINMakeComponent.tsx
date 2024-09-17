@@ -1,12 +1,10 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import styles from "./PINMakeComponent.module.css";
 import axios from "axios";
 
 export default function PINMakeComponent() {
-  const router = useRouter();
   const [pin, setPin] = useState<string>("");
   const [pinCheck, setPinCheck] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -75,10 +73,11 @@ export default function PINMakeComponent() {
             maxLength={6}
             onChange={handlerPinCheck}
           />
-          {message && <div>{message}</div>}
+          {message && <span className={styles.pinMsg}>{message}</span>}
           <button
+            type="button"
             className={styles.submitBtn}
-            disabled={message == "PIN 번호가 일치하지 않습니다." || !pinCheck || pinCheck.length != 6}
+            disabled={message.length != 0 || pin.length == 0 || pinCheck.length == 0 || pinCheck.length != 6}
           >
             확인
           </button>

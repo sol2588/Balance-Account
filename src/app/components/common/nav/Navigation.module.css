@@ -1,0 +1,106 @@
+.navContainer {
+  padding: 20px;
+  max-height: 120px;
+  color: #6c7c67;
+  border-bottom: 1px solid #d4cdc3;
+
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+.title {
+  font-size: 54px;
+  font-style: italic;
+  font-weight: 900;
+  word-break: keep-all;
+}
+.navList {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-self: flex-end;
+}
+.navItem {
+  margin-left: 12px;
+  padding: 10px;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  /* transition: border-color 2s ease; */
+}
+.navItem > a {
+  color: #6c7c67;
+  text-decoration: none;
+}
+.navItem:hover {
+  border-bottom: 1px solid #6c7c67;
+  transition: border-color 1s ease;
+}
+.menuIcon {
+  display: none;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .title {
+    font-size: 44px;
+  }
+  .navItem {
+    margin-left: 8px;
+    padding: 8px;
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .title {
+    font-size: 36px;
+  }
+  /* navList는 숨기고 toggleMenu는 block처리 */
+  .navContainer {
+    position: relative;
+  }
+  .navList {
+    display: none;
+  }
+  .toggleMenu {
+    display: block;
+    width: 50%;
+    min-width: 280px;
+    height: 100%;
+    margin: 0;
+    background-color: #a6b8a1;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 99;
+  }
+  .menuIcon {
+    display: block;
+  }
+  .menuClose {
+    color: #fff;
+    position: absolute;
+    top: 15px;
+    right: 0;
+    cursor: pointer;
+    z-index: 9999;
+  }
+  .navItem {
+    margin: 10px 50px 10px 10px;
+    padding: 10px;
+    border-bottom: 1px solid #d4cdc3;
+  }
+  .navItem:hover {
+    background-color: #879582;
+    border-radius: 8px;
+    transition: background-color 1s ease;
+  }
+  .navItem > a {
+    color: #fff;
+  }
+}

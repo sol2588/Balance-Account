@@ -1,18 +1,13 @@
 .transactionContainer {
-  height: 100vh;
-  overflow: auto;
   padding: 40px;
-}
-.transactionInfoWrapper {
 }
 .transactionTitle {
   font-size: 44px;
 }
 .myAccountInfo {
   padding: 30px;
+  border: 3px solid #6a7a65;
   border-radius: 16px;
-  background-color: #3f4364;
-
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
@@ -27,29 +22,28 @@
 .receiverSubtitle {
   color: #9fa2ae;
   font-size: 20px;
+  font-weight: 600;
 }
 .myAccountSubcontent {
   margin-bottom: 20px;
-  color: #fff;
   font-size: 30px;
   font-weight: 600;
 }
 .receiverWrapper {
   margin-top: 30px;
   padding: 30px;
+  border: 3px solid #6a7a65;
   border-radius: 16px;
-  background-color: #3f4364;
 }
 .receiverInfo {
   margin-top: 20px;
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
 }
 .receiverInfo > select {
   font-size: 16px;
   line-height: 1.5;
-  color: #fff;
-  background-color: #626b96;
   padding: 0.6em 1.4em 0.5em 0.8em;
   border-radius: 8px;
   box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
@@ -61,14 +55,23 @@
   border: none;
   border-radius: 8px;
   background-color: rgb(233, 233, 233);
+  box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+}
+.receiverAccountInput:focus {
+  outline: #6a7a65 1px solid;
 }
 .submitBtn {
   font-size: 16px;
   width: 100px;
+  color: #fff;
+  background-color: #9aa596;
   border: none;
   border-radius: 8px;
-  background-color: #f9b179;
   cursor: pointer;
+}
+.submitBtn:hover {
+  background-color: #6a7a65;
+  transition: background-color 1s ease;
 }
 .submitBtn:disabled {
   background-color: #cccccc;
@@ -78,8 +81,8 @@
 .targetWrapper {
   margin-top: 30px;
   padding: 30px;
+  border: 3px solid #6a7a65;
   border-radius: 16px;
-  background-color: #3f4364;
 }
 .targetAccountInfo {
   display: flex;
@@ -105,17 +108,12 @@
   font-size: 30px;
   font-weight: 600;
   margin-top: 20px;
-  color: #fff;
 }
-.warningStatus {
-  margin: 20px 0;
-  font-size: 16px;
-  color: red;
-}
+
 .informStatus {
   margin: 20px 0;
   font-size: 16px;
-  color: rgb(93, 168, 238);
+  color: #e26656;
 }
 .informMessage {
   display: block;
@@ -136,22 +134,22 @@
 .purposeBtn {
   margin: 20px 10px 20px 0;
   padding: 10px 12px;
+  height: 50px;
   font-size: 16px;
   line-height: 1rem;
-  border: 1px solid #141d2f;
-  border-radius: 8px;
   background-color: inherit;
-  color: #fff;
+  border: 1px solid #6a7a65;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
 }
 .purposeBtn:hover {
-  background-color: #626b96;
-  border-color: #f9b179;
+  background-color: #6a7a65;
+  transition: background-color 1s ease;
 }
 .active {
-  background-color: #f9b179;
-  border-color: #f9b179;
+  color: #fff;
+  background-color: #9aa596;
+  border-color: #9aa596;
   font-weight: bold;
 }
 .chooseBtnWrapper {
@@ -163,10 +161,15 @@
   font-size: 20px;
   padding: 10px 20px;
   margin-right: 20px;
+  color: #fff;
+  background-color: #9aa596;
   border: none;
   border-radius: 8px;
-  background-color: #f9b179;
   cursor: pointer;
+}
+.chooseBtn:hover {
+  background-color: #6a7a65;
+  transition: background-color 1s ease;
 }
 .chooseBtn:disabled {
   background-color: #cccccc;
@@ -177,18 +180,93 @@
   margin-top: 30px;
   padding: 30px;
   border-radius: 16px;
-  background-color: #3f4364;
+  border: 3px solid #6a7a65;
 }
 
 .transferResult {
+  display: block;
   color: #9fa2ae;
-  font-size: 30px;
+  font-size: 20px;
+}
+.transferResultBalance {
+  margin-top: 16px;
+  display: block;
+  color: #e26656;
+  font-size: 24px;
+  font-weight: 600;
 }
 .zeroStatus {
-  color: rgb(231, 83, 83);
+  color: #e26656;
   font-size: 16px;
 }
 
 .notAllowedStatus {
+  margin-bottom: 16px;
+  color: #e26656;
   display: block;
+}
+@media screen and (max-width: 1024px) {
+  .informStatus {
+    width: 100%;
+    margin: 0;
+  }
+  .receiverAccountInput {
+    min-width: 200px;
+  }
+  .submitBtn {
+    width: 80px;
+  }
+  .targetDatas {
+    flex-direction: column;
+  }
+  .purposeContent {
+    margin: 16px 0;
+  }
+}
+
+@media screen and (max-width: 769px) {
+  .transactionTitle {
+    font-size: 36px;
+  }
+  .myAccountSubtitle,
+  .receiverSubtitle {
+    font-size: 18px;
+  }
+  .myAccountSubcontent {
+    font-size: 24px;
+  }
+  .informStatus {
+    margin: 0;
+  }
+  .submitBtn {
+    width: 80px;
+    height: 40px;
+  }
+  .targetReceiver,
+  .targetAccountBank {
+    font-size: 18px;
+  }
+  .targetAmount,
+  .purposeTitle {
+    font-size: 24px;
+  }
+}
+
+@media screen and (max-width: 578px) {
+  .myAccountInfo {
+    display: block;
+  }
+  .receiverInfo {
+    flex-direction: column;
+  }
+  .receiverAccountInput {
+    height: 40px;
+  }
+  .submitBtn {
+    height: 40px;
+  }
+  .purposeBtn {
+    font-size: 12px;
+    width: 50px;
+  }
 }

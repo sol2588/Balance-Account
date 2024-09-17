@@ -1,6 +1,3 @@
-.makeAccountMenu {
-}
-
 .createTitle {
   font-size: 44px;
   text-align: start;
@@ -8,7 +5,7 @@
 .overviewContents {
   padding: 40px;
   height: auto;
-  background-color: #3f4364;
+  border: 3px solid #6a7a65;
   border-radius: 8px;
 }
 .overviewAccountInfo {
@@ -18,10 +15,10 @@
 .subTitle {
   color: #9fa2ae;
   font-size: 20px;
+  font-weight: 600;
 }
 .subContent {
   margin-bottom: 20px;
-  color: #fff;
   font-size: 36px;
   font-weight: 600;
 }
@@ -35,15 +32,15 @@
   padding: 10px 20px;
   width: 100px;
   height: 50px;
-  border: 1px solid;
+  color: #fff;
+  background-color: #9aa596;
+  border: none;
   border-radius: 8px;
-  background-color: inherit;
-  color: #f9b179;
   cursor: pointer;
 }
 .btn:hover {
-  border: 1px solid #f9b179;
-  background-color: #626b96;
+  background-color: #6a7a65;
+  transition: background-color 1s ease;
 }
 .accountLink {
   text-decoration: none;
@@ -56,4 +53,20 @@
 .messageBox {
   display: block;
   color: #e86969;
+}
+
+@media screen and (max-width: 769px) {
+  .createTitle {
+    font-size: 36px;
+  }
+  .subTitle {
+    font-size: 18px;
+  }
+  .subContent {
+    font-size: 24px;
+  }
+  .btn {
+    font-size: 16px;
+    width: auto;
+  }
 }

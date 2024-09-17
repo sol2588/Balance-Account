@@ -1,15 +1,15 @@
 .loginContainer {
   padding: 40px;
-  text-align: start;
+  text-align: center;
 }
 
 .loginHeader {
   font-size: 44px;
-  text-align: start;
-  margin-bottom: 0;
+  font-weight: 700;
+  margin-bottom: 8px;
 }
 .loginDesc {
-  color: #9fa2ae;
+  font-weight: 600;
   margin: 32px 0;
 }
 
@@ -21,35 +21,52 @@
   flex-direction: column;
 }
 .loginLabel {
-  color: #9fa2ae;
+  font-weight: 600;
 }
 .loginInput {
+  display: block;
   width: 300px;
   height: 50px;
-  margin: 20px 0;
+  margin: 10px auto 20px;
   background-color: transparent;
-  border: 1px solid #9fa2ae;
+  border: 1px solid #2f2f2f;
   border-radius: 8px;
   outline: none;
-  color: #f9b179;
+  color: #6a7a65;
+}
+.loginInput:focus {
+  outline: #6a7a65 1px solid;
 }
 .submitBtn {
   width: 300px;
   height: 50px;
-  margin: 32px 0;
-  background-color: #f9b179;
+  margin: 16px 0;
+  font-weight: 600;
+  color: #fff;
+  background-color: #9aa596;
   border: 0;
   border-radius: 8px;
   cursor: pointer;
+}
+.submitBtn {
+  background-color: #6a7a65;
+  transition: background-color 1s ease;
 }
 .submitBtn:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
 }
+.inputMsg {
+  display: block;
+  color: #e26656;
+}
+
 .contentsForGuest {
-  color: #9fa2ae;
+  font-weight: 600;
+  color: #2f2f2f;
 }
 .guestBtn {
+  font-weight: 600;
   border: none;
   color: #f9b179;
   background-color: transparent;
@@ -60,7 +77,9 @@
   width: 300px;
   height: 50px;
   margin-bottom: 32px;
-  background-color: #605be2;
+  color: #fff;
+  background-color: #e26656;
+  font-weight: 600;
   border-radius: 8px;
   border: 0;
   cursor: pointer;
@@ -68,8 +87,9 @@
 
 .googleBtn {
   display: flex;
-  align-items: center;
+  margin: 0 auto;
   background-color: inherit;
+  font-weight: 600;
   border: none;
   padding: 0;
   cursor: pointer;
