@@ -1,6 +1,5 @@
 .friendsContainer {
   height: 100vh;
-  overflow: auto;
   padding: 40px;
 }
 .friendsTitle {
@@ -72,4 +71,15 @@
 .informMessage {
   font-size: 20px;
   margin: 32px 0;
+}
+
+@media screen and (max-width: 578px) {
+  .recentTable th {
+    font-size: 12px;
+    padding: 5px;
+  }
+  .recentTableRow > td {
+    font-size: 12px;
+    padding: 5px;
+  }
 }

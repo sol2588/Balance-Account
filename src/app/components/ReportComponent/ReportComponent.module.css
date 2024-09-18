@@ -45,11 +45,19 @@
 .pagination {
   margin: 20px 0;
 }
-
+.datePicker {
+  margin: 20px 0;
+}
+.dateCalendar {
+  height: 40px;
+  background-color: #e9e9e9;
+  border: none;
+  border-radius: 8px;
+}
 .space {
   margin: 0 32px;
 }
-.clickPeroidBtn {
+.clickPeriodBtn {
   width: 100px;
   padding: 10px;
   margin-right: 20px;
@@ -58,10 +66,10 @@
   background-color: inherit;
   cursor: pointer;
 }
-.clickPeroidBtn:last-child {
+.clickPeriodBtn:last-child {
   margin-right: 0;
 }
-.clickPeroidBtn:hover {
+.clickPeriodBtn:hover {
   background-color: #6a7a65;
 }
 .periodActive {
@@ -74,25 +82,34 @@
   background-color: #6a7a65;
   border-color: #6a7a65;
 }
-.periodInput {
-  font-size: 16px;
-  margin: 20px 0;
-  height: 40px;
-  outline: none;
-  border: none;
-  border-radius: 8px;
-  background-color: rgb(233, 233, 233);
+
+.purposeWrapper {
+  margin-top: 20px;
 }
-.visuallyHidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
-  clip: rect(0, 0, 0, 0);
-  overflow: hidden;
-  white-space: nowrap;
+.purposeTypeBtn {
+  width: 75px;
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #2f2f2f;
+  border-radius: 20px;
+  background-color: inherit;
+  cursor: pointer;
+}
+.purposeTypeBtn:last-child {
+  margin-right: 0;
+}
+.purposeTypeBtn:hover {
+  background-color: #6a7a65;
+}
+.purposeActive {
+  background-color: #9aa596;
+  color: #fff;
+  border-color: #9aa596;
+  font-weight: 600;
+}
+.purposeActive:hover {
+  background-color: #6a7a65;
+  border-color: #6a7a65;
 }
 .reportResult {
   margin-top: 100px;
@@ -117,18 +134,19 @@
   font-size: 20px;
   font-weight: 500;
   display: block;
-  /* align-self: flex-end; */
 }
+
 @media screen and (max-width: 1024px) {
-  .clickPeroidBtn {
+  .clickPeriodBtn {
     width: 70px;
     margin-right: 10px;
   }
+  .purposeTypeBtn {
+    width: 65px;
+    margin-right: 8px;
+  }
   .reportResult {
     padding: 10px;
-  }
-  .periodInput {
-    width: 130px;
   }
   .reportResultTotal {
     margin: 32px 8px;
@@ -150,8 +168,11 @@
   .space {
     margin: 0 8px;
   }
-  .clickPeroidBtn {
+  .clickPeriodBtn {
     width: auto;
     margin-right: 10px;
+  }
+  .purposeTypeBtn {
+    width: auto;
   }
 }

@@ -7,6 +7,7 @@
 .recentTable th {
   font-weight: 600;
   border-bottom: 1px solid #ddd;
+  color: #fff;
   background-color: #6a7a65;
   padding: 10px 5px;
   text-align: left;
@@ -17,7 +18,7 @@
 }
 .buttonGroup {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 .numberBtn {
   background-color: inherit;

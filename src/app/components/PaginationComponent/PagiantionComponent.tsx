@@ -23,16 +23,16 @@ interface PaginationProps {
 export default function Pagination({ recentData }: PaginationProps) {
   const [btnActive, setBtnActive] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const totalData = items.length; // 총 데이터
+  const totalData = recentData.length; // 총 데이터
   const limitData = 4; // 한페이지에 보여줄 데이터의 개수
   const totalPage = Math.ceil(totalData / limitData); // 전체 페이지 수
-  const pageCount = 5; // 보여줄 버튼의 수
+  let pageCount = 5; // 보여줄 버튼의 수
   const pageGroup = Math.ceil(currentPage / pageCount); // 현재 버튼 그룹
   const totalGroup = Math.ceil(totalPage / pageCount); // 전체 버튼 그룹
 
   let lastNum = pageGroup * pageCount;
-  if (lastNum > totalPage) lastNum = totalPage;
   let firstNum = (pageGroup - 1) * pageCount + 1;
+  if (lastNum > totalPage) lastNum = totalPage;
 
   const next = lastNum + 1;
   const prev = firstNum - 1;
@@ -75,22 +75,23 @@ export default function Pagination({ recentData }: PaginationProps) {
         )}
         {Array(pageCount)
           .fill(firstNum)
-          .map((_, i) => {
-            return (
-              <button
-                type="button"
-                value={i}
-                className={[styles.numberBtn, i == btnActive ? styles.active : ""].join(" ")}
-                key={i}
-                onClick={(e: MouseEvent<HTMLButtonElement>) => {
-                  setCurrentPage(firstNum + i);
-                  setBtnActive(i);
-                }}
-              >
-                {firstNum + i}
-              </button>
-            );
-          })}
+          .map(
+            (_, i) =>
+              firstNum + i <= totalPage && (
+                <button
+                  type="button"
+                  value={i}
+                  className={[styles.numberBtn, i == btnActive ? styles.active : ""].join(" ")}
+                  key={i}
+                  onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                    setCurrentPage(firstNum + i);
+                    setBtnActive(i);
+                  }}
+                >
+                  {firstNum + i}
+                </button>
+              ),
+          )}
         {totalGroup > pageGroup && (
           <button type="button" className={styles.numberBtn} onClick={() => setCurrentPage(next)}>
             {">"}

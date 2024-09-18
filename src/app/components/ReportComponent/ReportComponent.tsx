@@ -3,6 +3,8 @@
 import { useState, useEffect, MouseEvent } from "react";
 import { Timestamp } from "firebase/firestore";
 import Pagination from "../PaginationComponent/PagiantionComponent";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import styles from "./ReportComponent.module.css";
 interface RecentProps {
@@ -26,14 +28,15 @@ interface FetchDataProps {
 }
 
 export default function ReportComponent() {
-  const [activeBtn, setActiveBtn] = useState<string>("peroid");
-  const [purposeBtn, setPurposeBtn] = useState<boolean>(false);
-  const [periodBtn, setPeroidBtn] = useState<string>("full");
+  const [activeBtn, setActiveBtn] = useState<string>("period");
+  const [purposeBtn, setPurposeBtn] = useState<string>("전체");
+  const [periodBtn, setPeriodBtn] = useState<string>("full");
   const [message, setMessage] = useState<string>("");
   const [originData, setOriginData] = useState<RecentProps[]>([]);
   const [recentData, setRecentData] = useState<RecentProps[]>([]);
-  const [startDate, setStartDate] = useState<string | undefined>();
-  const [endDate, setEndDate] = useState<string | undefined>();
+  const [startDate, setStartDate] = useState<Date | null>(new Date("2023-01-01"));
+  const [endDate, setEndDate] = useState<Date | null>(new Date());
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -45,11 +48,10 @@ export default function ReportComponent() {
             const formattedDate = timestamp.toISOString().split("T")[0];
             return { ...dataItem, date: formattedDate };
           });
-          setRecentData(formattedData);
+          setRecentData([...formattedData].sort((a, b) => b.idx - a.idx));
           setOriginData(formattedData);
         } else {
           console.log(response.data.message);
-          // ! 메시지 반환되는지 확인
           setMessage(response.data.message);
         }
       } catch (err: any) {
@@ -83,12 +85,28 @@ export default function ReportComponent() {
 
   const handleClickMonth = (e: MouseEvent<HTMLButtonElement>) => {
     const { value } = e.target as HTMLButtonElement;
-
     const targetDate = getTargetDate(value);
     const filterdData = filteredByDate(targetDate);
-    setStartDate(targetDate);
-    setEndDate(new Date().toISOString().split("T")[0]);
-    setRecentData(filterdData);
+    setStartDate(new Date(targetDate));
+    setEndDate(new Date());
+    setRecentData([...filterdData].sort((a, b) => b.idx - a.idx));
+  };
+
+  const handleChangeDate = (date: Date) => {
+    const targetDateToString = date.toISOString().split("T")[0];
+    const filteredData = filteredByDate(targetDateToString);
+    setStartDate(date);
+    setRecentData([...filteredData].sort((a, b) => b.idx - a.idx));
+  };
+
+  const handleClickPurpose = (e: MouseEvent<HTMLButtonElement>) => {
+    const { value } = e.target as HTMLButtonElement;
+    const newData = originData.filter(recent => recent?.purpose == value);
+    setRecentData([...newData].sort((a, b) => b.idx - a.idx));
+  };
+
+  const changeDateToString = (targetDate: Date) => {
+    return targetDate.toISOString().split("T")[0];
   };
 
   const periodOptions = [
@@ -97,6 +115,14 @@ export default function ReportComponent() {
     { label: "3개월", value: "month3" },
     { label: "6개월", value: "month6" },
     { label: "1년", value: "year1" },
+  ];
+  const purposeOptions = [
+    { value: "all", text: "전체" },
+    { value: "transaction", text: "거래" },
+    { value: "trading", text: "주식" },
+    { value: "food", text: "식비" },
+    { value: "lesuire", text: "여가" },
+    { value: "etc", text: "기타" },
   ];
 
   const totalSendMoney = recentData
@@ -117,11 +143,8 @@ export default function ReportComponent() {
             <button
               type="button"
               value="period"
-              className={[styles.selectBtn, activeBtn == "peroid" ? styles.active : ""].join(" ")}
-              onClick={() => {
-                setPurposeBtn(false);
-                setActiveBtn("peroid");
-              }}
+              className={[styles.selectBtn, activeBtn == "period" ? styles.active : ""].join(" ")}
+              onClick={() => setActiveBtn("period")}
             >
               기간별
             </button>
@@ -130,50 +153,55 @@ export default function ReportComponent() {
               value="purpose"
               className={[styles.selectBtn, activeBtn == "purpose" ? styles.active : ""].join(" ")}
               onClick={() => {
-                setPurposeBtn(true);
                 setActiveBtn("purpose");
               }}
             >
               목록별
             </button>
 
-            {purposeBtn ? (
+            {activeBtn == "purpose" ? (
               <div className={styles.purposeWrapper}>
-                <button value="transaction">거래</button>
-                <button value="trading">주식</button>
-                <button value="eat">식비</button>
-                <button value="lesuire">여가</button>
-                <button value="etc">기타</button>
+                {purposeOptions.map(option => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={[styles.purposeTypeBtn, purposeBtn == option.text ? styles.purposeActive : ""].join(" ")}
+                    value={option.text}
+                    onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                      const { value } = e.target as HTMLButtonElement;
+                      setPurposeBtn(value);
+                      handleClickPurpose(e);
+                    }}
+                  >
+                    {option.text}
+                  </button>
+                ))}
               </div>
             ) : (
               <div className={styles.periodWrapper}>
-                <div className={styles.datePick}>
-                  <label className={styles.visuallyHidden} htmlFor="startDate">
-                    시작날짜
-                  </label>
-                  <input
-                    className={styles.periodInput}
-                    type="text"
-                    id="startDate"
-                    value={startDate}
-                    placeholder="시작날짜"
+                <div className={styles.datePicker}>
+                  <ReactDatePicker
+                    className={styles.dateCalendar}
+                    showIcon
+                    dateFormat="yyyy-MM-dd"
+                    selected={startDate}
+                    onChange={date => handleChangeDate(date!)}
                   />
+
                   <span className={styles.space}>~</span>
-                  <label className={styles.visuallyHidden} htmlFor="endDate">
-                    종료날짜
-                  </label>
-                  <input
-                    className={styles.periodInput}
-                    type="text"
-                    id="endDate"
-                    value={endDate}
-                    placeholder="종료날짜"
+                  <ReactDatePicker
+                    className={styles.dateCalendar}
+                    showIcon
+                    disabled
+                    dateFormat="yyyy-MM-dd"
+                    selected={endDate}
+                    onChange={date => setEndDate(date)}
                   />
                 </div>
-                <div className={styles.peroidBtnWrapper}>
+                <div className={styles.periodBtnWrapper}>
                   {periodOptions.map(option => (
                     <button
-                      className={[styles.clickPeroidBtn, periodBtn == option.value ? styles.periodActive : ""].join(
+                      className={[styles.clickPeriodBtn, periodBtn == option.value ? styles.periodActive : ""].join(
                         " ",
                       )}
                       key={option.value}
@@ -181,7 +209,7 @@ export default function ReportComponent() {
                       onClick={(e: MouseEvent<HTMLButtonElement>) => {
                         handleClickMonth(e);
                         const { value } = e.target as HTMLButtonElement;
-                        setPeroidBtn(value);
+                        setPeriodBtn(value);
                       }}
                     >
                       {option.label}
@@ -199,7 +227,21 @@ export default function ReportComponent() {
           <div className={styles.reportTitle}>
             <span className={styles.reportResultTotal}>지출 총금액</span>
           </div>
-          <span>{startDate ? `${startDate}부터${endDate} 기간 동안` : "전체기간 동안"}</span>
+          {activeBtn == "period" ? (
+            <span className={styles.reportContent}>
+              {startDate ? (
+                <>
+                  <span>{changeDateToString(startDate)}부터 </span>
+                  <br />
+                  <span>{changeDateToString(endDate!)} 기간 동안</span>
+                </>
+              ) : (
+                "전체기간 동안"
+              )}
+            </span>
+          ) : (
+            <span>{purposeBtn} 지출 금액은</span>
+          )}
           <span className={styles.reportValue}>{totalSendMoney}원</span>
         </div>
       </div>
